@@ -1,0 +1,14 @@
+dist
+build
+
+node_modules/
+
+.npm
+.yarn
+
+.eslintcache
+
+.env
+.env.test
+
+.DS_Store
