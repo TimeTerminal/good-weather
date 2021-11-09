@@ -12,7 +12,6 @@ const renderAllColumns = (fiveDayData) => {
   const days = [];
 
   fiveDayData.map((dayData) => {
-    console.log('dayData :>> ', dayData);
     const {
       dt_txt,
       main: { feels_like, temp_min, temp_max },

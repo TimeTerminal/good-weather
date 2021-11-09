@@ -28,38 +28,7 @@ const getDayName = (dayNum) => {
   }
 };
 
-const getIconName = (description) => {
-  switch (description) {
-    case "Clear":
-      return "sun";
-    case "Clouds":
-      return "cloud";
-    case "Drizzle":
-      return "cloudDrizzle";
-    case "Rain":
-      return "cloudRain";
-    case "Snow":
-      return "cloudSnow";
-    case "Thunderstorm":
-      return "cloudLightning";
-    case "Mist":
-    case "Smoke":
-    case "Haze":
-    case "Dust":
-    case "Fog":
-    case "Sand":
-    case "Dust":
-    case "Ash":
-    case "Squall":
-    case "Tornado":
-      return "mist";
-    default:
-      return "sun";
-  }
-};
-
 module.exports = {
   formatDescription,
   getDayName,
-  getIconName,
 };

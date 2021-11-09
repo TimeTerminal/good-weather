@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
+import WeatherIcon from "./WeatherIcon";
 import { formatDescription } from "../util";
 import search from "/assets/images/search.svg";
 import settings from "/assets/images/settings.svg";
@@ -103,9 +104,9 @@ const Text = styled.p`
   text-decoration: none;
 `;
 
-const Header = (props) => {
-  console.log("props.selectedDayData :>> ", props.selectedDayData);
+const Icon = styled(WeatherIcon)``;
 
+const Header = (props) => {
   const formattedDescription = props.selectedDayData.weather
     ? formatDescription(props.selectedDayData.weather[0].description)
     : "";
@@ -113,6 +114,10 @@ const Header = (props) => {
   const temperature = props.selectedDayData.main
     ? props.selectedDayData.main.temp
     : "";
+
+  const main = props.selectedDayData.weather
+    ? props.selectedDayData.weather[0].main
+    : null;
 
   return (
     <HeaderContainer>
@@ -131,7 +136,9 @@ const Header = (props) => {
           </SettingsButton>
           {/* <RefreshButton isIcon={true} iconName={"refresh"} /> */}
         </TopRight>
-        <Center>Weather Icon - center</Center>
+        <Center>
+          <Icon main={main} headerIcon description={formattedDescription} />
+        </Center>
         <Bottom>
           <Text>{temperature}</Text>
           <Text>
