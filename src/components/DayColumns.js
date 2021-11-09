@@ -6,7 +6,6 @@ import DayColumn from "./DayColumn";
 const DayColumnsContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 1em;
 `;
 
 const renderAllColumns = (fiveDayData) => {

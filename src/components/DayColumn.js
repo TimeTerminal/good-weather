@@ -22,10 +22,14 @@ const DayColumnContainer = styled.button`
   background: none;
   border: 1px solid #fff;
   cursor: pointer;
-  transition: 0.2s ease-out;
+  transition: margin 0.2s ease-out, background 0.1s ease-in;
 
   &:hover {
-    transform: translateY(-10px);
+    margin-top: 0;
+    background: radial-gradient(ellipse at top, #4c4f72 10%, #343853 80%);
+  }
+  &:active {
+    margin-top: 0;
   }
 `;
 
@@ -43,20 +47,45 @@ const Subtitle = styled.h4`
   font-weight: normal;
 `;
 
-const Icon = styled.img`
-  width: 70px;
-  height: 70px;
-  margin: 5px 0 10px;
-`;
+const handleIconColour = (main) => {
+  switch (main) {
+    case "Clear":
+    case "Thunderstorm":
+      return "252, 213, 115";
+    case "Clouds":
+    case "Mist":
+    case "Smoke":
+    case "Haze":
+    case "Dust":
+    case "Fog":
+    case "Sand":
+    case "Dust":
+    case "Ash":
+    case "Squall":
+    case "Tornado":
+    case "Snow":
+      return "222, 223, 222";
+    case "Drizzle":
+    case "Rain":
+      return "54, 133, 242";
+    default:
+      return "#fff";
+  }
+};
 
-/*
+const Icon = styled.img`
+  width: 55px;
+  margin: 5px 0 20px;
+  background: none;
+
   ${(props) =>
-    props.iconPath &&
+    props.main &&
     css`
-      background: url(${props.iconPath}) no-repeat;
-      background-size: cover;
+      filter: drop-shadow(
+        0 10px 10px rgb(${handleIconColour(props.main)}, 0.8)
+      );
     `}
-*/
+`;
 
 const Text = styled.p`
   margin: 0 0 5px;
@@ -86,6 +115,7 @@ const DayColumn = (props) => {
       <Icon
         src={weatherIconPath}
         alt={`Weather icon - ${formattedDescription}`}
+        main={main}
       />
       <Subtitle>{formattedDescription}</Subtitle>
       <Text>Low: {dayLow}</Text>

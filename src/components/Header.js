@@ -13,23 +13,34 @@ const HeaderContainer = styled.div`
   background-color: #4c4f72;
   background-image: radial-gradient(
     ellipse at bottom,
-    #1b2735,
-    #20222f,
-    #343853,
-    #4c4f72
+    #4c4f72 0%,
+    #343853 5%,
+    #20222f 70%,
+    #1b2735 90%
   );
 `;
+
+// #98d4dc,
+// #7ac6d3,
+// #75bfcc
 
 const FormContainer = styled.form`
   display: flex;
   justify-content: center;
-  padding: 10px 50px;
+  padding: 30px 50px 5px;
+`;
+
+const HorizontalRule = styled.hr`
+  width: 90%;
+  height: 1px;
+  border: none;
+  background: #fff;
 `;
 
 const WeatherDataContainer = styled.div`
   display: grid;
   grid-template: repeat(3, 1fr) / 33% 33% 33%;
-  padding: 10px 50px;
+  padding: 10px 50px 30px;
 `;
 const TopLeft = styled.span`
   grid-column: 1 / 2;
@@ -48,30 +59,49 @@ const Center = styled.span`
   grid-column: 1 / 4;
   grid-row: 2;
 `;
-const BottomLeft = styled.span`
+const Bottom = styled.span`
   display: flex;
-  align-items: flex-end;
-  grid-column: 1 / 2;
-  grid-row: 3;
-`;
-const BottomRight = styled.span`
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  grid-column: 3 / 3;
+  flex-direction: column;
+  grid-column: 1 / 3;
   grid-row: 3;
 `;
 
+const Input = styled.input`
+  padding: 4px 5px;
+  font-size: 14px;
+`;
+
 const StyledButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 50px;
   height: 40px;
+  padding: 0;
+  background: none;
+  border: 1px solid #fff;
   cursor: pointer;
+  transition: 0.3s ease-out;
+
+  &:hover {
+    background: #9e9e9e;
+    border: 1px solid #9e9e9e;
+  }
+`;
+const SearchButton = styled(StyledButton)`
+  width: 40px;
+  border-radius: 0 4px 4px 0;
 `;
 const SettingsButton = styled(StyledButton)`
   width: 40px;
-  padding: 0;
+  border-radius: 4px;
 `;
 const RefreshButton = styled(StyledButton)``;
+
+const Text = styled.p`
+  margin: 0;
+  text-decoration: none;
+`;
 
 const Header = (props) => {
   console.log("props.selectedDayData :>> ", props.selectedDayData);
@@ -87,27 +117,29 @@ const Header = (props) => {
   return (
     <HeaderContainer>
       <FormContainer>
-        <input placeholder="Search Cities" />
-        <StyledButton onClick={() => props.fetchWeatherData(props.url)}>
+        <Input placeholder="Search Cities" />
+        <SearchButton onClick={() => props.fetchWeatherData(props.url)}>
           <img src={search} alt="Search icon" />
-        </StyledButton>
+        </SearchButton>
       </FormContainer>
+      <HorizontalRule />
       <WeatherDataContainer>
         <TopLeft>{props.locationName}</TopLeft>
         <TopRight>
           <SettingsButton>
-            {" "}
             <img src={settings} alt="Settings icon" />
           </SettingsButton>
           {/* <RefreshButton isIcon={true} iconName={"refresh"} /> */}
         </TopRight>
         <Center>Weather Icon - center</Center>
-        <BottomLeft>{temperature}</BottomLeft>
-        <BottomRight>
-          {!props.loading &&
-            props?.selectedDayData?.weather &&
-            formattedDescription}
-        </BottomRight>
+        <Bottom>
+          <Text>{temperature}</Text>
+          <Text>
+            {!props.loading &&
+              props?.selectedDayData?.weather &&
+              formattedDescription}
+          </Text>
+        </Bottom>
       </WeatherDataContainer>
     </HeaderContainer>
   );
