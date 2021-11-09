@@ -1,8 +1,11 @@
 $primary-color: #292929;
-$secondary-color: #ffffff;
+$secondary-color: #212121;
 $tertiary-color: #adadad;
+$text-color: #fffffd;
 
 body {
   background-color: $primary-color;
-  color: $secondary-color;
+  color: $text-color;
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Cantarell, "Helvetica Neue", sans-serif;
 }
