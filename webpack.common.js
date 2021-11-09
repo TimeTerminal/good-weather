@@ -30,7 +30,7 @@ module.exports = {
           loader: "file-loader",
           options: {
             name: "[name].[hash].[ext]",
-            outputPath: "imgs",
+            outputPath: "assets/images",
           },
         },
       },
@@ -39,7 +39,7 @@ module.exports = {
   plugins: [
     new HtmlWebPackPlugin({
       template: "./src/index.html",
-      favicon: "./assets/favicon.png",
+      favicon: "./assets/images/favicon.png",
     }),
     new Dotenv(),
   ],
