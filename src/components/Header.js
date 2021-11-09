@@ -1,36 +1,36 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-import Button from "./Button";
-const StyledButton = styled(Button)``;
+import { formatDescription } from "../util";
+import search from "/assets/images/search.svg";
+import settings from "/assets/images/settings.svg";
 
 const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 1000px;
+  background-color: #4c4f72;
+  background-image: radial-gradient(
+    ellipse at bottom,
+    #1b2735,
+    #20222f,
+    #343853,
+    #4c4f72
+  );
+`;
+
+const FormContainer = styled.form`
+  display: flex;
+  justify-content: center;
+  padding: 10px 50px;
 `;
 
 const WeatherDataContainer = styled.div`
   display: grid;
   grid-template: repeat(3, 1fr) / 33% 33% 33%;
+  padding: 10px 50px;
 `;
-
-const FormContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const SettingsButton = styled(StyledButton)`
-  ${(props) =>
-    props.isIcon &&
-    props.iconName &&
-    css`
-      background: none;
-      background-image: url("/assets/images/${props.iconName}.svg");
-    `}
-`;
-
-const RefreshButton = styled(Button)``;
-
 const TopLeft = styled.span`
   grid-column: 1 / 2;
   grid-row: 1;
@@ -62,24 +62,52 @@ const BottomRight = styled.span`
   grid-row: 3;
 `;
 
-const Header = (props) => {
+const StyledButton = styled.button`
+  width: 50px;
+  height: 40px;
+  cursor: pointer;
+`;
+const SettingsButton = styled(StyledButton)`
+  width: 40px;
+  padding: 0;
+`;
+const RefreshButton = styled(StyledButton)``;
 
-  console.log('props.selectedDayData :>> ', props.selectedDayData);
+const Header = (props) => {
+  console.log("props.selectedDayData :>> ", props.selectedDayData);
+
+  const formattedDescription = props.selectedDayData.weather
+    ? formatDescription(props.selectedDayData.weather[0].description)
+    : "";
+
+  const temperature = props.selectedDayData.main
+    ? props.selectedDayData.main.temp
+    : "";
+
   return (
     <HeaderContainer>
       <FormContainer>
         <input placeholder="Search Cities" />
-        <button onClick={() => props.getWeatherData(props.url)}>Search</button>
+        <StyledButton onClick={() => props.fetchWeatherData(props.url)}>
+          <img src={search} alt="Search icon" />
+        </StyledButton>
       </FormContainer>
       <WeatherDataContainer>
-        <TopLeft>{props.selectedDayData?.city?.name}</TopLeft>
+        <TopLeft>{props.locationName}</TopLeft>
         <TopRight>
-          <SettingsButton isIcon={true} iconName={"settings"} />
+          <SettingsButton>
+            {" "}
+            <img src={settings} alt="Settings icon" />
+          </SettingsButton>
           {/* <RefreshButton isIcon={true} iconName={"refresh"} /> */}
         </TopRight>
         <Center>Weather Icon - center</Center>
-        <BottomLeft>Temperature - bottom left</BottomLeft>
-        <BottomRight>Weather Description - bottom right</BottomRight>
+        <BottomLeft>{temperature}</BottomLeft>
+        <BottomRight>
+          {!props.loading &&
+            props?.selectedDayData?.weather &&
+            formattedDescription}
+        </BottomRight>
       </WeatherDataContainer>
     </HeaderContainer>
   );

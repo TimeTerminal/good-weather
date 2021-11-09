@@ -6,6 +6,9 @@ import DayColumns from "./components/DayColumns";
 import { API_URL, DAYS_TO_SHOW } from "./constants";
 
 const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 20px;
 `;
 
@@ -42,6 +45,10 @@ const App = () => {
         ...state,
         fiveDayData,
         loading: false,
+        selectedDay: {
+          ...state.selectedDay,
+          data: fiveDayData[0],
+        },
       });
     });
   };
@@ -75,9 +82,11 @@ const App = () => {
     <AppContainer>
       <Header
         fetchWeatherData={fetchWeatherData}
+        loading={state.loading}
+        locationName={location}
+        selectedDayData={state.selectedDay.data}
         setLocation={setLocation}
         url={url}
-        selectedDayData={state.selectedDay.data}
       />
       <DayColumns
         fiveDayData={state.fiveDayData}
