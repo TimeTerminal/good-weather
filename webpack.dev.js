@@ -10,7 +10,6 @@ module.exports = merge(common, {
     open: {
       app: {
         name: "firefox",
-        arguments: ["--incognito"],
       },
     },
     static: {
