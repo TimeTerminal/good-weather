@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import Header from "./components/Header";
@@ -23,8 +23,8 @@ const getResponse = async (url) => {
 };
 
 const App = () => {
-  const [location, setLocation] = useState("Toronto");
   const [state, setState] = useState({
+    location: "Toronto",
     fiveDayData: [],
     loading: false,
     selectedDay: {
@@ -32,22 +32,56 @@ const App = () => {
       data: {},
     },
   });
-  const url = new URL(`${API_URL}?q=${location}&appid=${apiKey}`);
 
-  const fetchWeatherData = (url) => {
-    setState({
-      ...state,
-      loading: true,
+  const usePreviousLocation = (value) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
     });
+    return ref.current;
+  };
+
+  const getPrevious = usePreviousLocation({ location: state.location });
+
+  const url = new URL(
+    `${API_URL}?q=${state.location}&appid=${apiKey}&units=metric`
+  );
+
+  const fetchWeatherData = (location) => {
+    if (!getPrevious) {
+      setState({
+        ...state,
+        loading: true,
+      });
+    }
+
+    const url = new URL(
+      `${API_URL}?q=${location}&appid=${apiKey}&units=metric`
+    );
 
     getResponse(url).then((apiResponse) => {
-      // TODO - check for errors: https://openweathermap.org/faq#error401
+      if (apiResponse.cod !== "200") {
+        if (apiResponse.cod === "404") {
+          return setState({
+            ...state,
+            loading: false,
+            location: getPrevious?.location,
+          });
+        }
+
+        return setState({
+          ...state,
+          loading: false,
+        });
+      }
+
       const fiveDayData = parseAPIResponse(apiResponse);
 
       setState({
         ...state,
         fiveDayData,
         loading: false,
+        location,
         selectedDay: {
           ...state.selectedDay,
           data: fiveDayData[0],
@@ -89,16 +123,15 @@ const App = () => {
     }
   };
 
-  useEffect(() => fetchWeatherData(url), []);
-  useEffect(() => fetchWeatherData(url), [location]);
+  useEffect(() => fetchWeatherData(state.location), []);
 
   return (
     <AppContainer>
       <Header
         loading={state.loading}
-        locationName={location}
+        locationName={state.location}
         selectedDayData={state.selectedDay.data}
-        setLocation={setLocation}
+        fetchWeatherData={fetchWeatherData}
         url={url}
       />
       <DayColumns

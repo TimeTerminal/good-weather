@@ -145,7 +145,7 @@ const Header = (props) => {
         />
         <SearchButton
           onClick={() => {
-            props.setLocation(searchValue);
+            props.fetchWeatherData(searchValue);
           }}
         >
           <img src={search} alt="Search icon" />
