@@ -1,4 +1,4 @@
-const formatDescription = (phrase) => {
+const capitalizePhrase = (phrase) => {
   return phrase
     .replace(new RegExp(/[-_]+/, "g"), " ")
     .replace(new RegExp(/[^\w\s]/, "g"), "")
@@ -29,6 +29,6 @@ const getDayName = (dayNum) => {
 };
 
 module.exports = {
-  formatDescription,
+  capitalizePhrase,
   getDayName,
 };

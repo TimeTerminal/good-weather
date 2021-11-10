@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 import WeatherIcon from "./WeatherIcon";
-import { formatDescription, getDayName, getIconName } from "../util";
+import { capitalizePhrase, getDayName, getIconName } from "../util";
 
 const DayColumnContainer = styled.button`
   display: flex;
@@ -60,29 +60,19 @@ const Text = styled.p`
 `;
 
 const DayColumn = (props) => {
-  const {
-    date,
-    day,
-    description,
-    id,
-    main,
-    selectedDayId,
-    setSelectedDay,
-    tempDayHigh,
-    tempDayLow,
-  } = props;
-  const formattedDescription = formatDescription(description);
+  const { id, selectedDayId } = props;
+  const formattedDescription = capitalizePhrase(props.description);
 
   return (
     <DayColumnContainer
       selected={selectedDayId === id}
-      onClick={() => setSelectedDay(selectedDayId, id)}
+      onClick={() => props.setSelectedDay(selectedDayId, id)}
     >
-      <Title>{getDayName(day)}</Title>
-      <Subtitle>{date}</Subtitle>
-      <Icon main={main} description={formattedDescription} />
-      <Text>Low: {tempDayLow}&#176;</Text>
-      <Text>High: {tempDayHigh}&#176;</Text>
+      <Title>{getDayName(props.day)}</Title>
+      <Subtitle>{props.date}</Subtitle>
+      <Icon main={props.main} description={formattedDescription} />
+      <Text>Low: {props.tempDayLow}&#176;</Text>
+      <Text>High: {props.tempDayHigh}&#176;</Text>
     </DayColumnContainer>
   );
 };

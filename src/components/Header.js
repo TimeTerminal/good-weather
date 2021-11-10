@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 
 import WeatherIcon from "./WeatherIcon";
-import { formatDescription } from "../util";
+import { capitalizePhrase } from "../util";
 import search from "/assets/images/search.svg";
 import settings from "/assets/images/settings.svg";
 
@@ -129,8 +129,10 @@ const Text = styled.p`
 const Icon = styled(WeatherIcon)``;
 
 const Header = (props) => {
+  const [searchValue, setSearchValue] = useState({});
+
   const formattedDescription = props.selectedDayData.weather
-    ? formatDescription(props.selectedDayData.weather[0].description)
+    ? capitalizePhrase(props.selectedDayData.weather[0].description)
     : "";
 
   const temperature = props.selectedDayData.main
@@ -144,15 +146,22 @@ const Header = (props) => {
   return (
     <HeaderContainer>
       <TopBorder />
-      <FormContainer>
-        <Input placeholder="Search Cities" />
-        <SearchButton onClick={() => props.fetchWeatherData(props.url)}>
+      <FormContainer onSubmit={(e) => e.preventDefault()}>
+        <Input
+          placeholder="Search Cities"
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+        <SearchButton
+          onClick={() => {
+            props.setLocation(searchValue);
+          }}
+        >
           <img src={search} alt="Search icon" />
         </SearchButton>
       </FormContainer>
       <HorizontalRule />
       <WeatherDataContainer>
-        <TopLeft>{props.locationName}</TopLeft>
+        <TopLeft>{capitalizePhrase(props.locationName)}</TopLeft>
         <TopRight>
           <SettingsButton>
             <img src={settings} alt="Settings icon" />

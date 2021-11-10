@@ -87,11 +87,11 @@ const App = () => {
   };
 
   useEffect(() => fetchWeatherData(url), []);
+  useEffect(() => fetchWeatherData(url), [location]);
 
   return (
     <AppContainer>
       <Header
-        fetchWeatherData={fetchWeatherData}
         loading={state.loading}
         locationName={location}
         selectedDayData={state.selectedDay.data}
