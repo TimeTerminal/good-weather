@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import _ from "lodash";
 
 import WeatherIcon from "./WeatherIcon";
-import { capitalizePhrase } from "../util";
+import { capitalizePhrase, getWindScale } from "../util";
 import search from "/assets/images/search.svg";
 import moon from "/assets/images/moon.svg";
 
@@ -42,7 +42,7 @@ const FormContainer = styled.form`
 const WeatherDataContainer = styled.div`
   display: grid;
   grid-template: repeat(3, 0.5fr) / 33% 33% 33%;
-  padding: 10px 50px 30px;
+  padding: 10px 50px;
 `;
 const TopLeft = styled.span`
   display: flex;
@@ -71,6 +71,7 @@ const Bottom = styled.span`
   align-items: center;
   grid-column: 1 / 4;
   grid-row: 3;
+  margin-top: 10px;
 `;
 
 const StyledButton = styled.button`
@@ -113,14 +114,14 @@ const DarkModeToggleButton = styled(StyledButton)`
 
 const Title = styled.h3`
   margin: 0;
-  font-size: 3.5em;
-  font-weight: bold;
   color: #f5f5f5;
+  font-size: 5em;
+  font-weight: bold;
+  line-height: 1;
 `;
 
 const Subtitle = styled.h4`
   margin: 0 0 10px;
-  color: ${(props) => (props.darkTheme ? "#9e9e9e" : "#fffffd")};
   font-size: 1.2em;
   font-weight: normal;
 `;
@@ -136,6 +137,7 @@ const Input = styled.input`
 const Text = styled.p`
   margin: 0;
   font-size: 18px;
+  color: ${(props) => (props.darkTheme ? "#9e9e9e" : "#fffffd")};
   text-decoration: none;
 `;
 
@@ -167,7 +169,7 @@ const Header = (props) => {
     <HeaderContainer darkTheme={props.darkTheme}>
       <FormContainer onSubmit={(e) => e.preventDefault()}>
         <Input
-          placeholder="Search Cities"
+          placeholder="Search Locations"
           onChange={(e) => setSearchValue(e.target.value)}
         />
         <SearchButton
@@ -180,7 +182,9 @@ const Header = (props) => {
           <img src={search} alt="Search icon" />
         </SearchButton>
       </FormContainer>
+
       <HorizontalRule />
+
       <WeatherDataContainer>
         <TopLeft>{capitalizePhrase(props.locationName)}</TopLeft>
         <TopRight>
@@ -193,18 +197,39 @@ const Header = (props) => {
             <img src={moon} alt="Toggle dark mode - moon icon" />
           </DarkModeToggleButton>
         </TopRight>
-        <Center>
-          <Image main={main} headerImage description={formattedDescription} />
-        </Center>
-        <Bottom>
-          <Title>{_.round(temperature)}&#176;</Title>
-          <Subtitle darkTheme={props.darkTheme}>
-            {!props.loading &&
-              props?.selectedDayData?.weather &&
-              formattedDescription}
-            , Feels like
-          </Subtitle>
-        </Bottom>
+        {!props.loading && (
+          <>
+            <Center>
+              <Image
+                main={main}
+                headerImage
+                description={formattedDescription}
+              />
+              <Title>{_.round(temperature)}&#176;</Title>
+            </Center>
+            <Bottom>
+              <Subtitle>
+                {props?.selectedDayData?.weather && formattedDescription}, Feels
+                like{" "}
+                {props?.selectedDayData?.main &&
+                  _.round(props.selectedDayData.main.feels_like)}
+                &#176;
+              </Subtitle>
+              <Text darkTheme={props.darkTheme}>
+                {props?.selectedDayData?.wind &&
+                  getWindScale(props.selectedDayData.wind.speed)}
+              </Text>
+              <span>
+                <Text darkTheme={props.darkTheme}>
+                  Humidity -{" "}
+                  {props?.selectedDayData?.main &&
+                    props.selectedDayData.main.humidity}
+                  &#176;
+                </Text>
+              </span>
+            </Bottom>
+          </>
+        )}
       </WeatherDataContainer>
     </HeaderContainer>
   );

@@ -31,3 +31,36 @@ export const getDayName = (dayNum) => {
       return "Sat";
   }
 };
+
+export const getWindScale = (windSpeed, isMetric = true) => {
+  const windInKmPH = isMetric && (windSpeed / 1000) * 3600;
+
+  switch (true) {
+    case windInKmPH <= 2:
+      return "Calm";
+    case windInKmPH > 2 && windInKmPH <= 6:
+      return "Light air";
+    case windInKmPH > 6 && windInKmPH <= 11:
+      return "Light breeze";
+    case windInKmPH > 11 && windInKmPH <= 19:
+      return "Gentle breeze";
+    case windInKmPH > 19 && windInKmPH <= 30:
+      return "Moderate breeze";
+    case windInKmPH > 30 && windInKmPH <= 39:
+      return "Fresh breeze";
+    case windInKmPH > 39 && windInKmPH <= 50:
+      return "Strong breeze";
+    case windInKmPH > 50 && windInKmPH <= 61:
+      return "Moderate gale";
+    case windInKmPH > 61 && windInKmPH <= 74:
+      return "Fresh gale";
+    case windInKmPH > 74 && windInKmPH <= 87:
+      return "Strong gale";
+    case windInKmPH > 87 && windInKmPH <= 102:
+      return "Whole gale";
+    case windInKmPH > 102 && windInKmPH <= 117:
+      return "Storm";
+    case windInKmPH > 117 && windInKmPH <= 1000:
+      return "Hurricane";
+  }
+};

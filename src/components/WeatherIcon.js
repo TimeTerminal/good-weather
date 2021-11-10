@@ -12,7 +12,7 @@ import wind from "/assets/images/wind.svg";
 
 const Icon = styled.img`
   width: ${(props) => (props.headerImage ? "70px" : "55px")};
-  margin: ${(props) => (props.headerImage ? "0" : "5px 0 20px")};
+  margin: ${(props) => (props.headerImage ? "0 15px 0 0" : "5px 0 20px")};
   background: none;
   transition: 1.5s ease;
 
