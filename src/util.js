@@ -4,6 +4,11 @@ import {
   METER_TO_KM_MULTIPLIER,
 } from "./constants";
 
+/**
+ * Capitalizes each word within a given phrase
+ * @param {string} phrase The phrase to capitalize
+ * @returns {string} The formatted phrase
+ */
 export const capitalizePhrase = (phrase) => {
   return phrase
     .replace(new RegExp(/[-_]+/, "g"), " ")
@@ -15,10 +20,20 @@ export const capitalizePhrase = (phrase) => {
     .replace(new RegExp(/\w/), (s) => s.toUpperCase());
 };
 
+/**
+ * Round a given floating-point temperature to the nearest integer
+ * @param {number} temperature
+ * @returns {number} Rounded integer
+ */
 export const formatTemperature = (temperature) => {
   return Math.round10(temperature.round);
 };
 
+/**
+ * Return the corresponding day name associated with its number in the week (starting at index 0)
+ * @param {number} dayNum
+ * @returns {string}
+ */
 export const getDayName = (dayNum) => {
   switch (dayNum) {
     case 0:
@@ -38,7 +53,13 @@ export const getDayName = (dayNum) => {
   }
 };
 
-export const getWindScale = (windSpeed, isMetric) => {
+/**
+ * Return the corresponding wind category for a given wind speed
+ * @param {number} windSpeed The speed to compare against
+ * @param {boolean} isMetric Used to check whether the passed wind speed is in Metric or Imperial units
+ * @returns {string} Wind category, eg. "Light breeze", "Strong gale", etc
+ */
+export const getWindCategory = (windSpeed, isMetric) => {
   const windInKmPH = isMetric
     ? windSpeed * METER_TO_KM_MULTIPLIER * HOURS_TO_SECONDS_MULTIPLIER
     : windSpeed * KM_TO_MILES_MULTIPLIER;

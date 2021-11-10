@@ -38,6 +38,11 @@ const App = () => {
     },
   });
 
+  /**
+   * Retains a passed value to be used later for comparison purposes.
+   * @param {any} value The value to save
+   * @returns {any} The current version of that value
+   */
   const usePreviousLocation = (value) => {
     const ref = useRef();
     useEffect(() => {
@@ -48,6 +53,10 @@ const App = () => {
 
   const getPrevious = usePreviousLocation({ location: state.location });
 
+  /**
+   * Fetches the weather data from the Open Weather Map API based on a passed location and sets the app state based on the fetched data. Upon receiving an error, loading is stopped and `state.error` is set to `true`.
+   * @param {string} location eg. "Moscow", "New York", "Hawaii", etc
+   */
   const fetchWeatherData = (location) => {
     if (!getPrevious) {
       setState({
@@ -92,7 +101,11 @@ const App = () => {
     });
   };
 
-  // Filter out the rest of the data and only retain 5-day data without the timestamp increments
+  /**
+   * API response parser called by `fetchWeatherData` upon successful weather data being received.
+   * @param {object} returnedData Weather data returned by the Open Weather Map API
+   * @returns {object} Filtered weather data belonging to the first timestamp from each day
+   */
   const parseAPIResponse = (returnedData) => {
     const filteredData = [];
     let currentDay = null;

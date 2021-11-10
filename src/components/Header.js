@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import _ from "lodash";
 
 import WeatherIcon from "./WeatherIcon";
-import { capitalizePhrase, getWindScale } from "../util";
+import { capitalizePhrase, getWindCategory } from "../util";
 import search from "/assets/images/search.svg";
 import moon from "/assets/images/moon.svg";
 import sun from "/assets/images/sun.svg";
@@ -257,7 +257,7 @@ const Header = (props) => {
               </Text>
               <Text darkTheme={props.darkTheme}>
                 {props?.selectedDayData?.wind &&
-                  getWindScale(
+                  getWindCategory(
                     props.selectedDayData.wind.speed,
                     props.isMetric
                   )}
