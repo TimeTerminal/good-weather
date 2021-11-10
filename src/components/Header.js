@@ -6,6 +6,7 @@ import WeatherIcon from "./WeatherIcon";
 import { capitalizePhrase, getWindScale } from "../util";
 import search from "/assets/images/search.svg";
 import moon from "/assets/images/moon.svg";
+import sun from "/assets/images/sun.svg";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -101,21 +102,17 @@ const SearchButton = styled(StyledButton)`
 `;
 const MeasurementUnitToggleButton = styled(StyledButton)`
   margin-right: 10px;
-  background: ${(props) => props.darkTheme && "#9e9e9e"};
   border-radius: 10px;
-  color: #f5f5f5;
-  font-size: 1em;
+  color: #ffffff;
+  font-size: 1.3em;
+
+  ${(props) => props.darkTheme && `border: 1px solid #9e9e9e;`}
 `;
 const DarkModeToggleButton = styled(StyledButton)`
   width: 40px;
   border-radius: 10px;
 
-  ${(props) =>
-    props.darkTheme &&
-    css`
-      background: #9e9e9e;
-      border: 1px solid #9e9e9e;
-    `}
+  ${(props) => props.darkTheme && `border: 1px solid #9e9e9e;`}
 `;
 
 const Title = styled.h3`
@@ -203,6 +200,7 @@ const Header = (props) => {
           onClick={() => {
             props.fetchWeatherData(searchValue);
           }}
+          type="submit"
         >
           <img src={search} alt="Search icon" />
         </SearchButton>
@@ -230,7 +228,7 @@ const Header = (props) => {
             }}
             darkTheme={props.darkTheme}
           >
-            <img src={moon} alt="Toggle dark mode - moon icon" />
+            <img src={props.darkTheme ? sun : moon} alt="Toggle dark mode - moon icon" />
           </DarkModeToggleButton>
         </TopRight>
         {!props.loading && (
