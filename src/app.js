@@ -11,7 +11,8 @@ const AppContainer = styled.div`
   align-items: center;
   width: 100%;
   max-width: 1000px;
-  background: #2e2e2e;
+  padding-bottom: 30px;
+  background: ${(props) => (props.darkTheme ? "#1a1a24" : "#75bfcc")};
   border: 20px #2e2e2e solid;
 `;
 
@@ -23,6 +24,8 @@ const getResponse = async (url) => {
 };
 
 const App = () => {
+  const [darkTheme, setDarkTheme] = useState(true);
+
   const [state, setState] = useState({
     location: "Toronto",
     fiveDayData: [],
@@ -126,8 +129,10 @@ const App = () => {
   useEffect(() => fetchWeatherData(state.location), []);
 
   return (
-    <AppContainer>
+    <AppContainer darkTheme={darkTheme}>
       <Header
+        darkTheme={darkTheme}
+        setDarkTheme={setDarkTheme}
         loading={state.loading}
         locationName={state.location}
         selectedDayData={state.selectedDay.data}
@@ -135,6 +140,7 @@ const App = () => {
         url={url}
       />
       <DayColumns
+        darkTheme={darkTheme}
         fiveDayData={state.fiveDayData}
         selectedDayId={state.selectedDay.index}
         setSelectedDay={setSelectedDay}

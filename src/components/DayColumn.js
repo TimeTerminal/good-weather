@@ -10,7 +10,7 @@ const DayColumnContainer = styled.button`
   flex-direction: column;
   align-items: center;
   max-width: 1000px;
-  min-width: 200px;
+  min-width: 150px;
   margin: 10px 0 0;
   padding: 20px 0 15px;
   background: none;
@@ -22,7 +22,12 @@ const DayColumnContainer = styled.button`
     props.selected &&
     css`
       margin-top: 0;
-      background: radial-gradient(ellipse at top, #4c4f72 10%, #343853 80%);
+      background: radial-gradient(
+        ellipse at top,
+        ${props.darkTheme
+          ? "#4c4f72 10%, #343853 80%"
+          : "#7ac6d3 10%,#67979f 90%"}
+      );
     `}
 
   ${(props) =>
@@ -30,13 +35,18 @@ const DayColumnContainer = styled.button`
     css`
       &:hover {
         margin-top: 0;
-        background: radial-gradient(ellipse at top, #4c4f72 10%, #343853 80%);
+        background: radial-gradient(
+          ellipse at top,
+          ${props.darkTheme
+            ? "#4c4f72 10%, #343853 80%"
+            : "#7ac6d3 10%,#67979f 90%"}
+        );
       }
     `}
 `;
 
 const Title = styled.h3`
-  margin: 0 0 10px;
+  margin: 0 0 5px;
   font-size: 28px;
   font-weight: normal;
   color: #f5f5f5;
@@ -44,9 +54,9 @@ const Title = styled.h3`
 
 const Subtitle = styled.h4`
   margin: 0 0 10px;
-  color: #9e9e9e;
-  font-size: 18px;
-  font-weight: normal;
+  color: ${(props) => (props.darkTheme ? "#9e9e9e" : "#f5f5f5")};
+  font-size: 1.5em;
+  font-weight: lighter;
 `;
 
 const Icon = styled(WeatherIcon)`
@@ -57,6 +67,7 @@ const Icon = styled(WeatherIcon)`
 
 const Text = styled.p`
   margin: 0 0 5px;
+  font-size: 1.2em;
   color: #efefef;
 `;
 
@@ -66,11 +77,12 @@ const DayColumn = (props) => {
 
   return (
     <DayColumnContainer
+      darkTheme={props.darkTheme}
       selected={selectedDayId === id}
       onClick={() => props.setSelectedDay(selectedDayId, id)}
     >
       <Title>{getDayName(props.day)}</Title>
-      <Subtitle>{props.date}</Subtitle>
+      <Subtitle darkTheme={props.darkTheme}>{props.date}</Subtitle>
       <Icon main={props.main} description={formattedDescription} />
       <Text>Low: {_.round(props.tempDayLow)}&#176;</Text>
       <Text>High: {_.round(props.tempDayHigh)}&#176;</Text>

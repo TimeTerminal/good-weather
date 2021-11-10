@@ -8,8 +8,14 @@ const DayColumnsContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   max-width: 100%;
+  margin-top: -100px;
   background: #292929;
-  border-radius: 0 0 10px 10px;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 20px;
+
+  @media (max-width: 1040px) {
+  }
 `;
 
 const renderAllColumns = (props) => {
@@ -30,6 +36,7 @@ const renderAllColumns = (props) => {
     days.push(
       <DayColumn
         key={dt_txt}
+        darkTheme={props.darkTheme}
         date={date}
         day={day}
         description={description}
