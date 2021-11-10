@@ -9,10 +9,10 @@ const DayColumnsContainer = styled.div`
   overflow-x: scroll;
 `;
 
-const renderAllColumns = (fiveDayData) => {
+const renderAllColumns = (props) => {
   const days = [];
 
-  fiveDayData.map((dayData) => {
+  props.fiveDayData.map((dayData, index) => {
     const {
       dt_txt,
       main: { feels_like, temp_min, temp_max },
@@ -31,8 +31,11 @@ const renderAllColumns = (fiveDayData) => {
         day={day}
         description={description}
         feelsLike={feels_like}
+        id={index}
         main={main}
         precipitationProbability={pop}
+        setSelectedDay={props.setSelectedDay}
+        selectedDayId={props.selectedDayId}
         tempDayLow={temp_min}
         tempDayHigh={temp_max}
       />
@@ -43,11 +46,7 @@ const renderAllColumns = (fiveDayData) => {
 };
 
 const DayColumns = (props) => {
-  return (
-    <DayColumnsContainer>
-      {renderAllColumns(props.fiveDayData)}
-    </DayColumnsContainer>
-  );
+  return <DayColumnsContainer>{renderAllColumns(props)}</DayColumnsContainer>;
 };
 
 export default DayColumns;

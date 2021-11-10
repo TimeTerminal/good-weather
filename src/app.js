@@ -74,7 +74,17 @@ const App = () => {
     return filteredData;
   };
 
-  const setSelectedDay = (index) => {};
+  const setSelectedDay = (currentIndex, newIndex) => {
+    if (currentIndex !== newIndex) {
+      setState({
+        ...state,
+        selectedDay: {
+          index: newIndex,
+          data: state.fiveDayData[newIndex],
+        },
+      });
+    }
+  };
 
   useEffect(() => fetchWeatherData(url), []);
 

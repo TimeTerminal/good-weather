@@ -17,13 +17,21 @@ const DayColumnContainer = styled.button`
   cursor: pointer;
   transition: margin 0.15s ease-out, background 0.15s ease;
 
-  &:hover {
-    margin-top: 0;
-    background: radial-gradient(ellipse at top, #4c4f72 10%, #343853 80%);
-  }
-  &:active {
-    margin-top: 0;
-  }
+  ${(props) =>
+    props.selected &&
+    css`
+      margin-top: 0;
+      background: radial-gradient(ellipse at top, #4c4f72 10%, #343853 80%);
+    `}
+
+  ${(props) =>
+    !props.selected &&
+    css`
+      &:hover {
+        margin-top: 0;
+        background: radial-gradient(ellipse at top, #4c4f72 10%, #343853 80%);
+      }
+    `}
 `;
 
 const Title = styled.h3`
@@ -52,11 +60,24 @@ const Text = styled.p`
 `;
 
 const DayColumn = (props) => {
-  const { date, day, tempDayHigh, tempDayLow, description, main } = props;
+  const {
+    date,
+    day,
+    description,
+    id,
+    main,
+    selectedDayId,
+    setSelectedDay,
+    tempDayHigh,
+    tempDayLow,
+  } = props;
   const formattedDescription = formatDescription(description);
 
   return (
-    <DayColumnContainer>
+    <DayColumnContainer
+      selected={selectedDayId === id}
+      onClick={() => setSelectedDay(selectedDayId, id)}
+    >
       <Title>{getDayName(day)}</Title>
       <Subtitle>{date}</Subtitle>
       <Icon main={main} description={formattedDescription} />
