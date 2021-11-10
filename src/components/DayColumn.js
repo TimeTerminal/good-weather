@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import _ from "lodash";
 
 import WeatherIcon from "./WeatherIcon";
 import { capitalizePhrase, getDayName, getIconName } from "../util";
@@ -10,7 +11,7 @@ const DayColumnContainer = styled.button`
   align-items: center;
   max-width: 1000px;
   min-width: 200px;
-  margin: 10px 0;
+  margin: 10px 0 0;
   padding: 20px 0 15px;
   background: none;
   border: 1px solid #fff;
@@ -71,8 +72,8 @@ const DayColumn = (props) => {
       <Title>{getDayName(props.day)}</Title>
       <Subtitle>{props.date}</Subtitle>
       <Icon main={props.main} description={formattedDescription} />
-      <Text>Low: {props.tempDayLow}&#176;</Text>
-      <Text>High: {props.tempDayHigh}&#176;</Text>
+      <Text>Low: {_.round(props.tempDayLow)}&#176;</Text>
+      <Text>High: {_.round(props.tempDayHigh)}&#176;</Text>
     </DayColumnContainer>
   );
 };

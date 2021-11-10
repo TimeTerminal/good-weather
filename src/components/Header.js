@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
+import _ from "lodash";
 
 import WeatherIcon from "./WeatherIcon";
 import { capitalizePhrase } from "../util";
@@ -10,7 +11,6 @@ const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 1000px;
   background-color: #4c4f72;
   background-image: radial-gradient(
     ellipse at bottom,
@@ -19,18 +19,12 @@ const HeaderContainer = styled.div`
     #20222f 70%,
     #1b2735 90%
   );
+  border-radius: 10px 10px 0 0;
 `;
 
 // #98d4dc,
 // #7ac6d3,
 // #75bfcc
-
-const TopBorder = styled.div`
-  background: #2e2e2e;
-  width: 100%;
-  height: 20px;
-  max-width: 1000px;
-`;
 
 const FormContainer = styled.form`
   display: flex;
@@ -86,13 +80,6 @@ const Input = styled.input`
   transition: 0.15s ease-out;
 `;
 
-const HorizontalRule = styled.hr`
-  width: 90%;
-  height: 1px;
-  border: none;
-  background: #fff;
-`;
-
 const StyledButton = styled.button`
   display: flex;
   justify-content: center;
@@ -118,7 +105,13 @@ const SettingsButton = styled(StyledButton)`
   width: 40px;
   border-radius: 4px;
 `;
-const RefreshButton = styled(StyledButton)``;
+
+const HorizontalRule = styled.hr`
+  width: 90%;
+  height: 1px;
+  border: none;
+  background: #fff;
+`;
 
 const Text = styled.p`
   margin: 0;
@@ -145,7 +138,6 @@ const Header = (props) => {
 
   return (
     <HeaderContainer>
-      <TopBorder />
       <FormContainer onSubmit={(e) => e.preventDefault()}>
         <Input
           placeholder="Search Cities"
@@ -166,7 +158,6 @@ const Header = (props) => {
           <SettingsButton>
             <img src={settings} alt="Settings icon" />
           </SettingsButton>
-          {/* <RefreshButton isIcon={true} iconName={"refresh"} /> */}
         </TopRight>
         <Center>
           <Icon main={main} headerIcon description={formattedDescription} />
@@ -177,7 +168,7 @@ const Header = (props) => {
               props?.selectedDayData?.weather &&
               formattedDescription}
           </Subtitle>
-          <Text>{temperature}&#176;</Text>
+          <Text>{_.round(temperature)}&#176;</Text>
         </Bottom>
       </WeatherDataContainer>
     </HeaderContainer>

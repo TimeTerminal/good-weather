@@ -14,6 +14,7 @@ const Icon = styled.img`
   width: ${(props) => (props.headerIcon ? "70px" : "55px")};
   margin: ${(props) => (props.headerIcon ? "0 0 20px" : "5px 0 20px")};
   background: none;
+  transition: 1.5s ease;
 
   ${(props) =>
     props.main &&

@@ -5,8 +5,11 @@ import DayColumn from "./DayColumn";
 
 const DayColumnsContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   max-width: 100%;
-  overflow-x: scroll;
+  background: #292929;
+  border-radius: 0 0 10px 10px;
 `;
 
 const renderAllColumns = (props) => {

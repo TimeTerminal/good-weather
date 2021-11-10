@@ -9,7 +9,10 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px;
+  width: 100%;
+  max-width: 1000px;
+  background: #2e2e2e;
+  border: 20px #2e2e2e solid;
 `;
 
 const apiKey = process.env.OPEN_WEATHER_API_KEY;

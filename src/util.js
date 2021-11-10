@@ -1,4 +1,4 @@
-const capitalizePhrase = (phrase) => {
+export const capitalizePhrase = (phrase) => {
   return phrase
     .replace(new RegExp(/[-_]+/, "g"), " ")
     .replace(new RegExp(/[^\w\s]/, "g"), "")
@@ -9,7 +9,11 @@ const capitalizePhrase = (phrase) => {
     .replace(new RegExp(/\w/), (s) => s.toUpperCase());
 };
 
-const getDayName = (dayNum) => {
+export const formatTemperature = (temperature) => {
+  return Math.round10(temperature.round);
+};
+
+export const getDayName = (dayNum) => {
   switch (dayNum) {
     case 0:
       return "Sun";
@@ -26,9 +30,4 @@ const getDayName = (dayNum) => {
     case 6:
       return "Sat";
   }
-};
-
-module.exports = {
-  capitalizePhrase,
-  getDayName,
 };
