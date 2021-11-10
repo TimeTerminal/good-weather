@@ -11,7 +11,7 @@ import sun from "/assets/images/sun.svg";
 import wind from "/assets/images/wind.svg";
 
 const Icon = styled.img`
-  width: ${(props) => (props.headerIcon ? "60px" : "55px")};
+  width: ${(props) => (props.headerIcon ? "70px" : "55px")};
   margin: ${(props) => (props.headerIcon ? "0 0 20px" : "5px 0 20px")};
   background: none;
 

@@ -15,7 +15,7 @@ const DayColumnContainer = styled.button`
   background: none;
   border: 1px solid #fff;
   cursor: pointer;
-  transition: margin 0.2s ease-out, background 0.1s ease-in;
+  transition: margin 0.15s ease-out, background 0.15s ease;
 
   &:hover {
     margin-top: 0;
@@ -52,7 +52,7 @@ const Text = styled.p`
 `;
 
 const DayColumn = (props) => {
-  const { date, day, dayHigh, dayLow, description, main } = props;
+  const { date, day, tempDayHigh, tempDayLow, description, main } = props;
   const formattedDescription = formatDescription(description);
 
   return (
@@ -60,9 +60,8 @@ const DayColumn = (props) => {
       <Title>{getDayName(day)}</Title>
       <Subtitle>{date}</Subtitle>
       <Icon main={main} description={formattedDescription} />
-      <Subtitle>{formattedDescription}</Subtitle>
-      <Text>Low: {dayLow}</Text>
-      <Text>High: {dayHigh}</Text>
+      <Text>Low: {tempDayLow}&#176;</Text>
+      <Text>High: {tempDayHigh}&#176;</Text>
     </DayColumnContainer>
   );
 };

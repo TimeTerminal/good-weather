@@ -5,7 +5,8 @@ import DayColumn from "./DayColumn";
 
 const DayColumnsContainer = styled.div`
   display: flex;
-  justify-content: center;
+  max-width: 100%;
+  overflow-x: scroll;
 `;
 
 const renderAllColumns = (fiveDayData) => {
@@ -28,12 +29,12 @@ const renderAllColumns = (fiveDayData) => {
         key={dt_txt}
         date={date}
         day={day}
-        dayLow={temp_min}
-        dayHigh={temp_max}
         description={description}
         feelsLike={feels_like}
         main={main}
         precipitationProbability={pop}
+        tempDayLow={temp_min}
+        tempDayHigh={temp_max}
       />
     );
   });

@@ -25,31 +25,34 @@ const HeaderContainer = styled.div`
 // #7ac6d3,
 // #75bfcc
 
+const TopBorder = styled.div`
+  background: #2e2e2e;
+  width: 100%;
+  height: 20px;
+  max-width: 1000px;
+`;
+
 const FormContainer = styled.form`
   display: flex;
   justify-content: center;
   padding: 30px 50px 5px;
 `;
 
-const HorizontalRule = styled.hr`
-  width: 90%;
-  height: 1px;
-  border: none;
-  background: #fff;
-`;
-
 const WeatherDataContainer = styled.div`
   display: grid;
-  grid-template: repeat(3, 1fr) / 33% 33% 33%;
+  grid-template: repeat(3, 0.5fr) / 33% 33% 33%;
   padding: 10px 50px 30px;
 `;
 const TopLeft = styled.span`
+  display: flex;
+  align-items: center;
   grid-column: 1 / 2;
   grid-row: 1;
 `;
 const TopRight = styled.span`
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   grid-column: 3 / 3;
   grid-row: 1;
 `;
@@ -63,13 +66,31 @@ const Center = styled.span`
 const Bottom = styled.span`
   display: flex;
   flex-direction: column;
-  grid-column: 1 / 3;
+  align-items: center;
+  grid-column: 1 / 4;
   grid-row: 3;
+`;
+
+const Subtitle = styled.h4`
+  margin: 0 0 10px;
+  color: #9e9e9e;
+  font-size: 18px;
+  font-weight: normal;
 `;
 
 const Input = styled.input`
   padding: 4px 5px;
   font-size: 14px;
+  border: 1px solid white;
+  border-radius: 4px 0 0 4px;
+  transition: 0.15s ease-out;
+`;
+
+const HorizontalRule = styled.hr`
+  width: 90%;
+  height: 1px;
+  border: none;
+  background: #fff;
 `;
 
 const StyledButton = styled.button`
@@ -82,7 +103,7 @@ const StyledButton = styled.button`
   background: none;
   border: 1px solid #fff;
   cursor: pointer;
-  transition: 0.3s ease-out;
+  transition: 0.15s ease-out;
 
   &:hover {
     background: #9e9e9e;
@@ -101,6 +122,7 @@ const RefreshButton = styled(StyledButton)``;
 
 const Text = styled.p`
   margin: 0;
+  font-size: 18px;
   text-decoration: none;
 `;
 
@@ -121,6 +143,7 @@ const Header = (props) => {
 
   return (
     <HeaderContainer>
+      <TopBorder />
       <FormContainer>
         <Input placeholder="Search Cities" />
         <SearchButton onClick={() => props.fetchWeatherData(props.url)}>
@@ -140,12 +163,12 @@ const Header = (props) => {
           <Icon main={main} headerIcon description={formattedDescription} />
         </Center>
         <Bottom>
-          <Text>{temperature}</Text>
-          <Text>
+          <Subtitle>
             {!props.loading &&
               props?.selectedDayData?.weather &&
               formattedDescription}
-          </Text>
+          </Subtitle>
+          <Text>{temperature}&#176;</Text>
         </Bottom>
       </WeatherDataContainer>
     </HeaderContainer>
