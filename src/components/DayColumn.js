@@ -14,7 +14,7 @@ const DayColumnContainer = styled.button`
   margin: 10px 0 0;
   padding: 20px 0 15px;
   background: none;
-  border: 1px solid #fff;
+  border: 1px solid #f5f5f5;
   cursor: pointer;
   transition: margin 0.15s ease-out, background 0.15s ease;
 
@@ -86,6 +86,7 @@ const DayColumn = (props) => {
       <Icon main={props.main} description={formattedDescription} />
       <Text>Low: {_.round(props.tempDayLow)}&#176;</Text>
       <Text>High: {_.round(props.tempDayHigh)}&#176;</Text>
+      <Text>POP: {props.precipitationProbability * 100}&#x25;</Text>
     </DayColumnContainer>
   );
 };

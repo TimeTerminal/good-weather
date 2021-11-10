@@ -1,7 +1,13 @@
 const API_URL = "https://api.openweathermap.org/data/2.5/forecast/";
 const DAYS_TO_SHOW = 5;
+const KM_TO_MILES_MULTIPLIER = 1.609344;
+const HOURS_TO_SECONDS_MULTIPLIER = 3600;
+const METER_TO_KM_MULTIPLIER = 0.001;
 
 module.exports = {
   API_URL,
   DAYS_TO_SHOW,
+  HOURS_TO_SECONDS_MULTIPLIER,
+  KM_TO_MILES_MULTIPLIER,
+  METER_TO_KM_MULTIPLIER,
 };

@@ -78,7 +78,7 @@ const StyledButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
+  width: 40px;
   height: 40px;
   padding: 0;
   background: none;
@@ -97,12 +97,18 @@ const StyledButton = styled.button`
   }
 `;
 const SearchButton = styled(StyledButton)`
-  width: 40px;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 10px 10px 0;
+`;
+const MeasurementUnitToggleButton = styled(StyledButton)`
+  margin-right: 10px;
+  background: ${(props) => props.darkTheme && "#9e9e9e"};
+  border-radius: 10px;
+  color: #f5f5f5;
+  font-size: 1em;
 `;
 const DarkModeToggleButton = styled(StyledButton)`
   width: 40px;
-  border-radius: 4px;
+  border-radius: 10px;
 
   ${(props) =>
     props.darkTheme &&
@@ -114,7 +120,7 @@ const DarkModeToggleButton = styled(StyledButton)`
 
 const Title = styled.h3`
   margin: 0;
-  color: #f5f5f5;
+  color: ${(props) => (props.darkTheme ? "#c2dbfa" : "#fdd87d")};
   font-size: 5em;
   font-weight: bold;
   line-height: 1;
@@ -127,18 +133,37 @@ const Subtitle = styled.h4`
 `;
 
 const Input = styled.input`
-  padding: 4px 5px;
+  padding: 4px 10px;
+  color: #1a1a24;
   font-size: 14px;
+  background-color: #f5f5f5;
   border: 1px solid white;
-  border-radius: 4px 0 0 4px;
+  border-radius: 10px 0 0 10px;
   transition: 0.15s ease-out;
 `;
 
 const Text = styled.p`
-  margin: 0;
-  font-size: 18px;
+  margin: 8px 0 0;
   color: ${(props) => (props.darkTheme ? "#9e9e9e" : "#fffffd")};
+  font-size: 1.1em;
+  line-height: 1.3em;
   text-decoration: none;
+`;
+
+const ErrorText = styled.p`
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  opacity: 0;
+  transform: scaleY(0);
+  transition: transform 0.1s ease, opacity 0.4s ease;
+
+  ${(props) =>
+    props.isError &&
+    css`
+      opacity: 1;
+      transform: scaleY(1);
+    `}
 `;
 
 const HorizontalRule = styled.hr`
@@ -182,12 +207,23 @@ const Header = (props) => {
           <img src={search} alt="Search icon" />
         </SearchButton>
       </FormContainer>
+      <ErrorText isError={props.isError}>
+        Please select a different location.
+      </ErrorText>
 
       <HorizontalRule />
 
       <WeatherDataContainer>
         <TopLeft>{capitalizePhrase(props.locationName)}</TopLeft>
         <TopRight>
+          <MeasurementUnitToggleButton
+            onClick={() => {
+              props.setIsMetric(!props.isMetric);
+            }}
+            darkTheme={props.darkTheme}
+          >
+            &#176;{props.isMetric ? "C" : "F"}
+          </MeasurementUnitToggleButton>
           <DarkModeToggleButton
             onClick={() => {
               props.setDarkTheme(!props.darkTheme);
@@ -205,7 +241,9 @@ const Header = (props) => {
                 headerImage
                 description={formattedDescription}
               />
-              <Title>{_.round(temperature)}&#176;</Title>
+              <Title darkTheme={props.darkTheme}>
+                {_.round(temperature)}&#176;
+              </Title>
             </Center>
             <Bottom>
               <Subtitle>
@@ -216,17 +254,21 @@ const Header = (props) => {
                 &#176;
               </Subtitle>
               <Text darkTheme={props.darkTheme}>
-                {props?.selectedDayData?.wind &&
-                  getWindScale(props.selectedDayData.wind.speed)}
+                {props?.selectedDayData?.pop && props.selectedDayData.pop * 100}
+                &#x25; chance of rain
               </Text>
-              <span>
-                <Text darkTheme={props.darkTheme}>
-                  Humidity -{" "}
-                  {props?.selectedDayData?.main &&
-                    props.selectedDayData.main.humidity}
-                  &#176;
-                </Text>
-              </span>
+              <Text darkTheme={props.darkTheme}>
+                {props?.selectedDayData?.wind &&
+                  getWindScale(
+                    props.selectedDayData.wind.speed,
+                    props.isMetric
+                  )}
+              </Text>
+              <Text darkTheme={props.darkTheme}>
+                {props?.selectedDayData?.main &&
+                  props.selectedDayData.main.humidity}
+                &#x25; Humidity
+              </Text>
             </Bottom>
           </>
         )}

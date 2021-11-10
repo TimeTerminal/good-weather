@@ -56,7 +56,11 @@ const renderAllColumns = (props) => {
 };
 
 const DayColumns = (props) => {
-  return <DayColumnsContainer>{renderAllColumns(props)}</DayColumnsContainer>;
+  return (
+    <DayColumnsContainer>
+      {!props.loading && renderAllColumns(props)}
+    </DayColumnsContainer>
+  );
 };
 
 export default DayColumns;

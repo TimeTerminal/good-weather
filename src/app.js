@@ -13,7 +13,7 @@ const AppContainer = styled.div`
   max-width: 1000px;
   padding-bottom: 30px;
   background: ${(props) => (props.darkTheme ? "#1a1a24" : "#75bfcc")};
-  border: 20px #2e2e2e solid;
+  border: 20px ${(props) => (props.darkTheme ? "#2e2e2e" : "#f5f5f5")} solid;
 `;
 
 const apiKey = process.env.OPEN_WEATHER_API_KEY;
@@ -25,11 +25,13 @@ const getResponse = async (url) => {
 
 const App = () => {
   const [darkTheme, setDarkTheme] = useState(true);
+  const [isMetric, setIsMetric] = useState(true);
 
   const [state, setState] = useState({
-    location: "Toronto",
+    error: false,
     fiveDayData: [],
     loading: false,
+    location: "Toronto",
     selectedDay: {
       index: 0,
       data: {},
@@ -46,10 +48,6 @@ const App = () => {
 
   const getPrevious = usePreviousLocation({ location: state.location });
 
-  const url = new URL(
-    `${API_URL}?q=${state.location}&appid=${apiKey}&units=metric`
-  );
-
   const fetchWeatherData = (location) => {
     if (!getPrevious) {
       setState({
@@ -58,15 +56,14 @@ const App = () => {
       });
     }
 
-    const url = new URL(
-      `${API_URL}?q=${location}&appid=${apiKey}&units=metric`
-    );
+    const url = formURL(location);
 
     getResponse(url).then((apiResponse) => {
       if (apiResponse.cod !== "200") {
         if (apiResponse.cod === "404") {
           return setState({
             ...state,
+            error: true,
             loading: false,
             location: getPrevious?.location,
           });
@@ -74,6 +71,7 @@ const App = () => {
 
         return setState({
           ...state,
+          error: true,
           loading: false,
         });
       }
@@ -82,11 +80,12 @@ const App = () => {
 
       setState({
         ...state,
+        error: false,
         fiveDayData,
         loading: false,
         location,
         selectedDay: {
-          ...state.selectedDay,
+          index: 0,
           data: fiveDayData[0],
         },
       });
@@ -114,6 +113,14 @@ const App = () => {
     return filteredData;
   };
 
+  const formURL = (location) => {
+    return new URL(
+      `${API_URL}?q=${location}&appid=${apiKey}&units=${
+        isMetric ? "metric" : "imperial"
+      }`
+    );
+  };
+
   const setSelectedDay = (currentIndex, newIndex) => {
     if (currentIndex !== newIndex) {
       setState({
@@ -127,21 +134,27 @@ const App = () => {
   };
 
   useEffect(() => fetchWeatherData(state.location), []);
+  useEffect(() => fetchWeatherData(state.location), [isMetric]);
+  const url = formURL(state.location);
 
   return (
     <AppContainer darkTheme={darkTheme}>
       <Header
         darkTheme={darkTheme}
-        setDarkTheme={setDarkTheme}
+        fetchWeatherData={fetchWeatherData}
+        isMetric={isMetric}
+        isError={state.error}
         loading={state.loading}
         locationName={state.location}
         selectedDayData={state.selectedDay.data}
-        fetchWeatherData={fetchWeatherData}
+        setDarkTheme={setDarkTheme}
+        setIsMetric={setIsMetric}
         url={url}
       />
       <DayColumns
         darkTheme={darkTheme}
         fiveDayData={state.fiveDayData}
+        loading={state.loading}
         selectedDayId={state.selectedDay.index}
         setSelectedDay={setSelectedDay}
       />

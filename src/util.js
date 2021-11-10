@@ -1,3 +1,9 @@
+import {
+  HOURS_TO_SECONDS_MULTIPLIER,
+  KM_TO_MILES_MULTIPLIER,
+  METER_TO_KM_MULTIPLIER,
+} from "./constants";
+
 export const capitalizePhrase = (phrase) => {
   return phrase
     .replace(new RegExp(/[-_]+/, "g"), " ")
@@ -32,8 +38,10 @@ export const getDayName = (dayNum) => {
   }
 };
 
-export const getWindScale = (windSpeed, isMetric = true) => {
-  const windInKmPH = isMetric && (windSpeed / 1000) * 3600;
+export const getWindScale = (windSpeed, isMetric) => {
+  const windInKmPH = isMetric
+    ? windSpeed * METER_TO_KM_MULTIPLIER * HOURS_TO_SECONDS_MULTIPLIER
+    : windSpeed * KM_TO_MILES_MULTIPLIER;
 
   switch (true) {
     case windInKmPH <= 2:

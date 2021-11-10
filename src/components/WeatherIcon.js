@@ -20,7 +20,8 @@ const Icon = styled.img`
     props.main &&
     css`
       filter: drop-shadow(
-        0 10px 10px rgb(${handleIconColour(props.main)}, 0.8)
+        0 ${props.headerImage ? "0" : "10px"} 10px
+          rgb(${handleIconColour(props.main)}, 0.8)
       );
     `}
 `;
