@@ -164,6 +164,7 @@ const App = () => {
         setIsMetric={setIsMetric}
         url={url}
       />
+      
       <DayColumns
         darkTheme={darkTheme}
         fiveDayData={state.fiveDayData}
