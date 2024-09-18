@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import _ from "lodash";
+import { round } from "lodash";
 
 import WeatherIcon from "./WeatherIcon";
 import { capitalizePhrase, getWindCategory } from "../util";
@@ -16,8 +16,8 @@ const HeaderContainer = styled.div`
   background-color: #4c4f72;
   background-image: radial-gradient(
     ellipse at bottom,
-    ${(props) =>
-      props.darkTheme
+    ${({ darkTheme }) =>
+      darkTheme
         ? css`
           #343853 0%,
           #2c2e43 10%,
@@ -90,10 +90,8 @@ const StyledButton = styled.button`
   &:hover {
     background: radial-gradient(
       ellipse at top,
-      ${(props) =>
-        props.darkTheme
-          ? "#4c4f72 10%, #343853 80%"
-          : "#7ac6d3 10%,#67979f 90%"}
+      ${({ darkTheme }) =>
+        darkTheme ? "#4c4f72 10%, #343853 80%" : "#7ac6d3 10%,#67979f 90%"}
     );
   }
 `;
@@ -106,18 +104,18 @@ const MeasurementUnitToggleButton = styled(StyledButton)`
   color: #ffffff;
   font-size: 1.3em;
 
-  ${(props) => props.darkTheme && `border: 1px solid #9e9e9e;`}
+  ${({ darkTheme }) => darkTheme && `border: 1px solid #9e9e9e;`}
 `;
 const DarkModeToggleButton = styled(StyledButton)`
   width: 40px;
   border-radius: 10px;
 
-  ${(props) => props.darkTheme && `border: 1px solid #9e9e9e;`}
+  ${({ darkTheme }) => darkTheme && `border: 1px solid #9e9e9e;`}
 `;
 
 const Title = styled.h3`
   margin: 0;
-  color: ${(props) => (props.darkTheme ? "#c2dbfa" : "#fdd87d")};
+  color: ${({ darkTheme }) => (darkTheme ? "#c2dbfa" : "#fdd87d")};
   font-size: 5em;
   font-weight: bold;
   line-height: 1;
@@ -141,7 +139,7 @@ const Input = styled.input`
 
 const Text = styled.p`
   margin: 8px 0 0;
-  color: ${(props) => (props.darkTheme ? "#9e9e9e" : "#fffffd")};
+  color: ${({ darkTheme }) => (darkTheme ? "#9e9e9e" : "#fffffd")};
   font-size: 1.1em;
   line-height: 1.3em;
   text-decoration: none;
@@ -155,8 +153,8 @@ const ErrorText = styled.p`
   transform: scaleY(0);
   transition: transform 0.1s ease, opacity 0.4s ease;
 
-  ${(props) =>
-    props.isError &&
+  ${({ isError }) =>
+    isError &&
     css`
       opacity: 1;
       transform: scaleY(1);
@@ -170,102 +168,106 @@ const HorizontalRule = styled.hr`
   background: #fff;
 `;
 
-const Image = styled(WeatherIcon)``;
+const Header = ({
+  darkTheme,
+  fetchWeatherData,
+  isError,
+  isMetric,
+  loading,
+  locationName,
+  selectedDayData,
+  setDarkTheme,
+}) => {
+  const getTemperatureUnits = (isMetric) => `° ${isMetric ? "C" : "F"}`;
 
-const Header = (props) => {
   const [searchValue, setSearchValue] = useState({});
 
-  const formattedDescription = props.selectedDayData.weather
-    ? capitalizePhrase(props.selectedDayData.weather[0].description)
-    : "";
+  const temperature = selectedDayData.main?.temp ?? "";
+  let formattedDescription = "";
+  let main = null;
 
-  const temperature = props.selectedDayData.main
-    ? props.selectedDayData.main.temp
-    : "";
+  if (selectedDayData.weather) {
+    formattedDescription = capitalizePhrase(
+      selectedDayData.weather[0].description
+    );
 
-  const main = props.selectedDayData.weather
-    ? props.selectedDayData.weather[0].main
-    : null;
+    main = selectedDayData.weather[0].main;
+  }
 
   return (
-    <HeaderContainer darkTheme={props.darkTheme}>
+    <HeaderContainer darkTheme={darkTheme}>
       <FormContainer onSubmit={(e) => e.preventDefault()}>
         <Input
           placeholder="Search Locations"
           onChange={(e) => setSearchValue(e.target.value)}
         />
         <SearchButton
-          darkTheme={props.darkTheme}
+          darkTheme={darkTheme}
           disabled={!searchValue.length}
           onClick={() => {
-            props.fetchWeatherData(searchValue);
+            fetchWeatherData(searchValue);
           }}
           type="submit"
         >
           <img src={search} alt="Search icon" />
         </SearchButton>
       </FormContainer>
-      <ErrorText isError={props.isError}>
+      <ErrorText isError={isError}>
         Please select a different location.
       </ErrorText>
 
       <HorizontalRule />
 
       <WeatherDataContainer>
-        <TopLeft>{capitalizePhrase(props.locationName)}</TopLeft>
+        <TopLeft>{capitalizePhrase(locationName)}</TopLeft>
         <TopRight>
           <MeasurementUnitToggleButton
             onClick={() => {
-              props.setIsMetric(!props.isMetric);
+              setIsMetric(!isMetric);
             }}
-            darkTheme={props.darkTheme}
+            darkTheme={darkTheme}
           >
-            &#176;{props.isMetric ? "C" : "F"}
+            {getTemperatureUnits(isMetric)}
           </MeasurementUnitToggleButton>
           <DarkModeToggleButton
             onClick={() => {
-              props.setDarkTheme(!props.darkTheme);
+              setDarkTheme(!darkTheme);
             }}
-            darkTheme={props.darkTheme}
+            darkTheme={darkTheme}
           >
-            <img src={props.darkTheme ? sun : moon} alt="Toggle dark mode - moon icon" />
+            <img
+              src={darkTheme ? sun : moon}
+              alt="Toggle dark mode - moon icon"
+            />
           </DarkModeToggleButton>
         </TopRight>
-        {!props.loading && (
+        {!loading && (
           <>
             <Center>
-              <Image
+              <WeatherIcon
                 main={main}
                 headerImage
                 description={formattedDescription}
               />
-              <Title darkTheme={props.darkTheme}>
-                {_.round(temperature)}&#176;
-              </Title>
+              <Title darkTheme={darkTheme}>{round(temperature)}&#176;</Title>
             </Center>
             <Bottom>
               <Subtitle>
-                {props?.selectedDayData?.weather && formattedDescription}, Feels
-                like{" "}
-                {props?.selectedDayData?.main &&
-                  _.round(props.selectedDayData.main.feels_like)}
+                {selectedDayData?.weather && formattedDescription}, Feels like{" "}
+                {selectedDayData.main && round(selectedDayData.main.feels_like)}
                 &#176;
               </Subtitle>
-              <Text darkTheme={props.darkTheme}>
-                {props?.selectedDayData?.pop && props.selectedDayData.pop * 100}
-                &#x25; chance of rain
+              <Text darkTheme={darkTheme}>
+                {`${
+                  selectedDayData?.pop && selectedDayData.pop * 100
+                }% chance of rain`}
               </Text>
-              <Text darkTheme={props.darkTheme}>
-                {props?.selectedDayData?.wind &&
-                  getWindCategory(
-                    props.selectedDayData.wind.speed,
-                    props.isMetric
-                  )}
+              <Text darkTheme={darkTheme}>
+                {selectedDayData.wind &&
+                  getWindCategory(selectedDayData.wind.speed, isMetric)}
               </Text>
-              <Text darkTheme={props.darkTheme}>
-                {props?.selectedDayData?.main &&
-                  props.selectedDayData.main.humidity}
-                &#x25; Humidity
+              <Text darkTheme={darkTheme}>
+                {`${selectedDayData?.main?.humidity}% Humidity`}
               </Text>
             </Bottom>
           </>

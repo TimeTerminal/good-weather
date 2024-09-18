@@ -16,8 +16,9 @@ Light mode:
 
 ## Development
 
-- `npm i` Install dependencies
-- `npm run dev` Opens your browser to `localhost:8000`
+- `npm i` - to install dependencies
+- `npm run dev` - open your browser to `localhost:9000`
+- Create a `.env` file in the root directory and add env variables following the `.env.example` file
 
 ## Build
 

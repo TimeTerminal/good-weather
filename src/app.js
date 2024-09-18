@@ -12,15 +12,13 @@ const AppContainer = styled.div`
   width: 100%;
   max-width: 1000px;
   padding-bottom: 30px;
-  background: ${(props) => (props.darkTheme ? "#1a1a24" : "#75bfcc")};
-  border: 20px ${(props) => (props.darkTheme ? "#2e2e2e" : "#f5f5f5")} solid;
+  background: ${({ darkTheme }) => (darkTheme ? "#1a1a24" : "#75bfcc")};
+  border: 20px ${({ darkTheme }) => (darkTheme ? "#2e2e2e" : "#f5f5f5")} solid;
 `;
-
-const apiKey = process.env.OPEN_WEATHER_API_KEY;
 
 const getResponse = async (url) => {
   const weatherResponse = await fetch(url);
-  return weatherResponse.json();
+  return await weatherResponse.json();
 };
 
 const App = () => {
@@ -31,12 +29,12 @@ const App = () => {
     error: false,
     fiveDayData: [],
     loading: false,
-    location: "Toronto",
     selectedDay: {
       index: 0,
       data: {},
     },
   });
+  const [location, setLocation] = useState("Toronto");
 
   /**
    * Retains a passed value to be used later for comparison purposes.
@@ -51,7 +49,7 @@ const App = () => {
     return ref.current;
   };
 
-  const getPrevious = usePreviousLocation({ location: state.location });
+  const getPrevious = usePreviousLocation({ location });
 
   /**
    * Fetches the weather data from the Open Weather Map API based on a passed location and sets the app state based on the fetched data. Upon receiving an error, loading is stopped and `state.error` is set to `true`.
@@ -128,9 +126,9 @@ const App = () => {
 
   const formURL = (location) => {
     return new URL(
-      `${API_URL}?q=${location}&appid=${apiKey}&units=${
-        isMetric ? "metric" : "imperial"
-      }`
+      `${API_URL}?q=${location}&appid=${
+        process.env.OPEN_WEATHER_API_KEY
+      }&units=${isMetric ? "metric" : "imperial"}`
     );
   };
 
@@ -146,9 +144,9 @@ const App = () => {
     }
   };
 
-  useEffect(() => fetchWeatherData(state.location), []);
-  useEffect(() => fetchWeatherData(state.location), [isMetric]);
-  const url = formURL(state.location);
+  useEffect(() => fetchWeatherData(location), []);
+  useEffect(() => fetchWeatherData(location), [isMetric]);
+  const url = formURL(location);
 
   return (
     <AppContainer darkTheme={darkTheme}>
@@ -158,7 +156,7 @@ const App = () => {
         isMetric={isMetric}
         isError={state.error}
         loading={state.loading}
-        locationName={state.location}
+        locationName={location}
         selectedDayData={state.selectedDay.data}
         setDarkTheme={setDarkTheme}
         setIsMetric={setIsMetric}
