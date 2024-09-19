@@ -12,18 +12,15 @@ const AppContainer = styled.div`
   width: 100%;
   max-width: 1000px;
   padding-bottom: 30px;
-  background: ${({ darkTheme }) => (darkTheme ? "#1a1a24" : "#75bfcc")};
-  border: 20px ${({ darkTheme }) => (darkTheme ? "#2e2e2e" : "#f5f5f5")} solid;
+  background: ${({ $isDarkTheme }) => ($isDarkTheme ? "#1a1a24" : "#75bfcc")};
+  border: 20px ${({ $isDarkTheme }) => ($isDarkTheme ? "#2e2e2e" : "#f5f5f5")}
+    solid;
 `;
 
-const getResponse = async (url) => {
-  const weatherResponse = await fetch(url);
-  return await weatherResponse.json();
-};
-
 const App = () => {
-  const [darkTheme, setDarkTheme] = useState(true);
+  const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [isMetric, setIsMetric] = useState(true);
+  const [location, setLocation] = useState("Toronto");
 
   const [state, setState] = useState({
     error: false,
@@ -34,7 +31,12 @@ const App = () => {
       data: {},
     },
   });
-  const [location, setLocation] = useState("Toronto");
+
+  const url = new URL(
+    `${API_URL}?q=${location}&appid=${process.env.OPEN_WEATHER_API_KEY}&units=${
+      isMetric ? "metric" : "imperial"
+    }`
+  );
 
   /**
    * Retains a passed value to be used later for comparison purposes.
@@ -50,54 +52,6 @@ const App = () => {
   };
 
   const getPrevious = usePreviousLocation({ location });
-
-  /**
-   * Fetches the weather data from the Open Weather Map API based on a passed location and sets the app state based on the fetched data. Upon receiving an error, loading is stopped and `state.error` is set to `true`.
-   * @param {string} location eg. "Moscow", "New York", "Hawaii", etc
-   */
-  const fetchWeatherData = (location) => {
-    if (!getPrevious) {
-      setState({
-        ...state,
-        loading: true,
-      });
-    }
-
-    const url = formURL(location);
-
-    getResponse(url).then((apiResponse) => {
-      if (apiResponse.cod !== "200") {
-        if (apiResponse.cod === "404") {
-          return setState({
-            ...state,
-            error: true,
-            loading: false,
-            location: getPrevious?.location,
-          });
-        }
-
-        return setState({
-          ...state,
-          error: true,
-          loading: false,
-        });
-      }
-
-      const fiveDayData = parseAPIResponse(apiResponse);
-
-      setState({
-        ...state,
-        error: false,
-        fiveDayData,
-        loading: false,
-        location,
-        selectedDay: {
-          index: 0,
-          data: fiveDayData[0],
-        },
-      });
-    });
-  };
 
   /**
    * API response parser called by `fetchWeatherData` upon successful weather data being received.
@@ -124,12 +78,47 @@ const App = () => {
     return filteredData;
   };
 
-  const formURL = (location) => {
-    return new URL(
-      `${API_URL}?q=${location}&appid=${
-        process.env.OPEN_WEATHER_API_KEY
-      }&units=${isMetric ? "metric" : "imperial"}`
-    );
+  /**
+   * Fetches the weather data from the Open Weather Map API based on a passed location and sets the app state based on the fetched data. Upon receiving an error, loading is stopped and `state.error` is set to `true`.
+   * @param {string} location eg. "Moscow", "New York", "Hawaii", etc
+   */
+  const fetchWeatherData = async (location) => {
+    if (!getPrevious) {
+      setState({
+        ...state,
+        loading: true,
+      });
+    }
+
+    const openWeatherResponse = await fetch(url);
+    const jsonData = await openWeatherResponse.json();
+
+    if (jsonData.cod !== "200") {
+      if (jsonData.cod === "404") {
+        setLocation(getPrevious.location);
+      }
+
+      return setState({
+        ...state,
+        error: true,
+        loading: false,
+      });
+    }
+
+    const fiveDayData = parseAPIResponse(jsonData);
+
+    setLocation(location);
+
+    setState({
+      ...state,
+      error: false,
+      fiveDayData,
+      loading: false,
+      selectedDay: {
+        index: 0,
+        data: fiveDayData[0],
+      },
+    });
   };
 
   const setSelectedDay = (currentIndex, newIndex) => {
@@ -144,26 +133,25 @@ const App = () => {
     }
   };
 
-  useEffect(() => fetchWeatherData(location), []);
-  useEffect(() => fetchWeatherData(location), [isMetric]);
-  const url = formURL(location);
+  useEffect(() => {
+    fetchWeatherData(location);
+  }, [isMetric]);
 
   return (
-    <AppContainer darkTheme={darkTheme}>
+    <AppContainer $isDarkTheme={isDarkTheme}>
       <Header
-        darkTheme={darkTheme}
+        isDarkTheme={isDarkTheme}
         fetchWeatherData={fetchWeatherData}
         isMetric={isMetric}
         isError={state.error}
         loading={state.loading}
         locationName={location}
         selectedDayData={state.selectedDay.data}
-        setDarkTheme={setDarkTheme}
+        setIsDarkTheme={setIsDarkTheme}
         setIsMetric={setIsMetric}
-        url={url}
       />
       <DayColumns
-        darkTheme={darkTheme}
+        isDarkTheme={isDarkTheme}
         fiveDayData={state.fiveDayData}
         loading={state.loading}
         selectedDayId={state.selectedDay.index}

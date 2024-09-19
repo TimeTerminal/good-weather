@@ -13,15 +13,10 @@ const DayColumnsContainer = styled.div`
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   padding: 20px;
-
-  @media (max-width: 1040px) {
-  }
 `;
 
-const renderAllColumns = (props) => {
-  const days = [];
-
-  props.fiveDayData.map((dayData, index) => {
+const renderAllColumns = ({ fiveDayData, ...props }) => {
+  const days = fiveDayData.map((dayData, index) => {
     const {
       dt_txt,
       main: { feels_like, temp_min, temp_max },
@@ -33,10 +28,9 @@ const renderAllColumns = (props) => {
     const date = dt_txt.substring(5, 10).replace("-", "/");
     const day = new Date(dt_txt).getDay();
 
-    days.push(
+    return (
       <DayColumn
         key={dt_txt}
-        darkTheme={props.darkTheme}
         date={date}
         day={day}
         description={description}
@@ -44,10 +38,9 @@ const renderAllColumns = (props) => {
         id={index}
         main={main}
         precipitationProbability={pop}
-        setSelectedDay={props.setSelectedDay}
-        selectedDayId={props.selectedDayId}
         tempDayLow={temp_min}
         tempDayHigh={temp_max}
+        {...props}
       />
     );
   });

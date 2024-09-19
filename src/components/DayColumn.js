@@ -1,11 +1,11 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import _ from "lodash";
+import { round } from "lodash";
 
 import WeatherIcon from "./WeatherIcon";
-import { capitalizePhrase, getDayName, getIconName } from "../util";
+import { capitalizePhrase, getDayName } from "../util";
 
-const DayColumnContainer = styled.button`
+const DayContainer = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,31 +18,28 @@ const DayColumnContainer = styled.button`
   cursor: pointer;
   transition: margin 0.15s ease-out, background 0.15s ease;
 
-  ${(props) =>
-    props.selected &&
-    css`
-      margin-top: 0;
-      background: radial-gradient(
-        ellipse at top,
-        ${props.darkTheme
-          ? "#4c4f72 10%, #343853 80%"
-          : "#7ac6d3 10%,#67979f 90%"}
-      );
-    `}
-
-  ${(props) =>
-    !props.selected &&
-    css`
-      &:hover {
-        margin-top: 0;
-        background: radial-gradient(
-          ellipse at top,
-          ${props.darkTheme
-            ? "#4c4f72 10%, #343853 80%"
-            : "#7ac6d3 10%,#67979f 90%"}
-        );
-      }
-    `}
+  ${({ $isDarkTheme, selected }) =>
+    selected
+      ? css`
+          margin-top: 0;
+          background: radial-gradient(
+            ellipse at top,
+            ${$isDarkTheme
+              ? "#4c4f72 10%, #343853 80%"
+              : "#7ac6d3 10%, #67979f 90%"}
+          );
+        `
+      : css`
+          &:hover {
+            margin-top: 0;
+            background: radial-gradient(
+              ellipse at top,
+              ${$isDarkTheme
+                ? "#4c4f72 10%, #343853 80%"
+                : "#7ac6d3 10%, #67979f 90%"}
+            );
+          }
+        `}
 `;
 
 const Title = styled.h3`
@@ -54,7 +51,7 @@ const Title = styled.h3`
 
 const Subtitle = styled.h4`
   margin: 0 0 10px;
-  color: ${(props) => (props.darkTheme ? "#9e9e9e" : "#f5f5f5")};
+  color: ${({ $isDarkTheme }) => ($isDarkTheme ? "#9e9e9e" : "#f5f5f5")};
   font-size: 1.5em;
   font-weight: lighter;
 `;
@@ -71,23 +68,34 @@ const Text = styled.p`
   color: #efefef;
 `;
 
-const DayColumn = (props) => {
-  const { id, selectedDayId } = props;
-  const formattedDescription = capitalizePhrase(props.description);
+const DayColumn = ({
+  day,
+  date,
+  description,
+  id,
+  isDarkTheme,
+  main,
+  precipitationProbability,
+  selectedDayId,
+  setSelectedDay,
+  tempDayLow,
+  tempDayHigh,
+}) => {
+  const formattedDescription = capitalizePhrase(description);
 
   return (
-    <DayColumnContainer
-      darkTheme={props.darkTheme}
+    <DayContainer
+      $isDarkTheme={isDarkTheme}
       selected={selectedDayId === id}
-      onClick={() => props.setSelectedDay(selectedDayId, id)}
+      onClick={() => setSelectedDay(selectedDayId, id)}
     >
-      <Title>{getDayName(props.day)}</Title>
-      <Subtitle darkTheme={props.darkTheme}>{props.date}</Subtitle>
-      <Icon main={props.main} description={formattedDescription} />
-      <Text>Low: {_.round(props.tempDayLow)}&#176;</Text>
-      <Text>High: {_.round(props.tempDayHigh)}&#176;</Text>
-      <Text>POP: {props.precipitationProbability * 100}&#x25;</Text>
-    </DayColumnContainer>
+      <Title>{getDayName(day)}</Title>
+      <Subtitle $darkTheme={isDarkTheme}>{date}</Subtitle>
+      <Icon main={main} description={formattedDescription} />
+      <Text>Low: {round(tempDayLow)}&#176;</Text>
+      <Text>High: {round(tempDayHigh)}&#176;</Text>
+      <Text>POP: {precipitationProbability * 100}%</Text>
+    </DayContainer>
   );
 };
 

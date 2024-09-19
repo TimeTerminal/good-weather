@@ -11,17 +11,17 @@ import sun from "/assets/images/sun.svg";
 import wind from "/assets/images/wind.svg";
 
 const Icon = styled.img`
-  width: ${(props) => (props.headerImage ? "70px" : "55px")};
-  margin: ${(props) => (props.headerImage ? "0 15px 0 0" : "5px 0 20px")};
+  width: ${({ $headerImage }) => ($headerImage ? "70px" : "55px")};
+  margin: ${({ $headerImage }) => ($headerImage ? "0 15px 0 0" : "5px 0 20px")};
   background: none;
   transition: 1.5s ease;
 
-  ${(props) =>
-    props.main &&
+  ${({ $headerImage, $main }) =>
+    $main &&
     css`
       filter: drop-shadow(
-        0 ${props.headerImage ? "0" : "10px"} 10px
-          rgb(${handleIconColour(props.main)}, 0.8)
+        0 ${$headerImage ? "0" : "10px"} 10px
+          rgb(${handleIconColour($main)}, 0.8)
       );
     `}
 `;
@@ -82,7 +82,7 @@ const getIconName = (description) => {
   }
 };
 
-const WeatherIcon = (props) => {
+const WeatherIcon = ({ description, headerImage, main }) => {
   const iconDict = {
     sun,
     cloud,
@@ -93,14 +93,14 @@ const WeatherIcon = (props) => {
     mist,
     wind,
   };
-  const weatherIconPath = iconDict[getIconName(props.main)];
+  const weatherIconPath = iconDict[getIconName(main)];
 
   return (
     <Icon
       src={weatherIconPath}
-      alt={`Weather icon - ${props.description}`}
-      main={props.main}
-      headerImage={props.headerImage}
+      alt={`Weather icon - ${description}`}
+      $main={main}
+      $headerImage={headerImage}
     />
   );
 };

@@ -42,6 +42,7 @@ const config = {
   resolve: {
     extensions: [".ts", ".js", ".tsx", ".jsx"],
   },
+  stats: "minimal",
 };
 
 module.exports = () => {
