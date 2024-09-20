@@ -1,21 +1,34 @@
 import React from "react";
 import styled from "styled-components";
 
-import DayColumn from "./DayColumn";
+import SingleDay from "./SingleDay";
+import { RESPONSIVE_SIZES } from "../../constants";
 
-const DayColumnsContainer = styled.div`
+const MultiDayContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   max-width: 100%;
-  margin-top: -100px;
   background: #292929;
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  margin-top: 20px;
   padding: 20px;
 `;
 
-const renderAllColumns = ({ fiveDayData, ...props }) => {
+const renderAllColumns = ({ fiveDayData, viewportWidth, ...props }) => {
+  const createDate = (apiDate) => {
+    const dateObj = new Date(apiDate);
+
+    const day = dateObj.getDay();
+    const date = dateObj.toLocaleString("en-US", {
+      month: viewportWidth > RESPONSIVE_SIZES.MOBILE ? "short" : "2-digit",
+      day: "numeric",
+    });
+
+    return { date, day };
+  };
+
   const days = fiveDayData.map((dayData, index) => {
     const {
       dt_txt,
@@ -25,11 +38,10 @@ const renderAllColumns = ({ fiveDayData, ...props }) => {
         [0]: { main, description },
       },
     } = dayData;
-    const date = dt_txt.substring(5, 10).replace("-", "/");
-    const day = new Date(dt_txt).getDay();
+    const { date, day } = createDate(dt_txt);
 
     return (
-      <DayColumn
+      <SingleDay
         key={dt_txt}
         date={date}
         day={day}
@@ -48,12 +60,12 @@ const renderAllColumns = ({ fiveDayData, ...props }) => {
   return days;
 };
 
-const DayColumns = (props) => {
+const MultiDay = (props) => {
   return (
-    <DayColumnsContainer>
+    <MultiDayContainer>
       {!props.loading && renderAllColumns(props)}
-    </DayColumnsContainer>
+    </MultiDayContainer>
   );
 };
 
-export default DayColumns;
+export default MultiDay;

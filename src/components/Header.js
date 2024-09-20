@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import { round } from "lodash";
 
 import WeatherIcon from "./WeatherIcon";
-import { capitalizePhrase, getWindCategory } from "../util";
+import { capitalizePhrase, getWindCategory } from "../helpers";
 import search from "/assets/images/search.svg";
 import moon from "/assets/images/moon.svg";
 import sun from "/assets/images/sun.svg";
@@ -12,38 +12,57 @@ const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-bottom: 100px;
-  background-color: #4c4f72;
-  background-image: radial-gradient(
-    ellipse at bottom,
-    ${({ $isDarkTheme }) =>
-      $isDarkTheme
-        ? css`
-          #343853 0%,
-          #2c2e43 10%,
-          #20222f 30%,
-          #1a1a24 50%`
-        : css`
-          #b7e2e8 0%,
-          #98d4dc 10%,
-          #7ac6d3 30%,
-          #75bfcc 50%
-          `}
-  );
-  border-radius: 10px 10px 0 0;
+  border-radius: 8px 8px 0 0;
   transition: all 0.3s ease;
+`;
+
+const StyledButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: none;
+  border: 1px solid #fff;
+  cursor: pointer;
+  transition: 0.15s ease-out;
+
+  &:hover {
+    background: radial-gradient(
+      ellipse at top,
+      ${({ $isDarkTheme }) =>
+        $isDarkTheme ? "#4c4f72 10%, #343853 80%" : "#7ac6d3 10%,#67979f 90%"}
+    );
+  }
 `;
 
 const FormContainer = styled.form`
   display: flex;
   justify-content: center;
-  padding: 30px 50px 5px;
 `;
 
+const SearchInput = styled.input`
+  padding: 4px 10px;
+  background-color: ${({ $isDarkTheme }) =>
+    $isDarkTheme ? "#2d2e2f" : "#f5f5f5"};
+  color: ${({ $isDarkTheme }) => ($isDarkTheme ? "#f5f5f5" : "#1a1a24")};
+  font-size: 14px;
+  border: 1px solid white;
+  border-radius: 8px 0 0 8px;
+  transition: 0.15s ease-out;
+`;
+
+const SearchButton = styled(StyledButton)`
+  border-radius: 0 8px 8px 0;
+`;
+
+// ====================
+// === Weather Data ===
+// ====================
 const WeatherDataContainer = styled.div`
   display: grid;
   grid-template: repeat(3, 0.5fr) / 33% 33% 33%;
-  padding: 10px 50px;
 `;
 const TopLeft = styled.span`
   display: flex;
@@ -75,45 +94,9 @@ const Bottom = styled.span`
   margin-top: 10px;
 `;
 
-const StyledButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  background: none;
-  border: 1px solid #fff;
-  cursor: pointer;
-  transition: 0.15s ease-out;
-
-  &:hover {
-    background: radial-gradient(
-      ellipse at top,
-      ${({ $isDarkTheme }) =>
-        $isDarkTheme ? "#4c4f72 10%, #343853 80%" : "#7ac6d3 10%,#67979f 90%"}
-    );
-  }
-`;
-
-const Search = styled.input`
-  padding: 4px 10px;
-  background-color: ${({ $isDarkTheme }) =>
-    $isDarkTheme ? "#2d2e2f" : "#f5f5f5"};
-  color: ${({ $isDarkTheme }) => ($isDarkTheme ? "#f5f5f5" : "#1a1a24")};
-  font-size: 14px;
-  border: 1px solid white;
-  border-radius: 10px 0 0 10px;
-  transition: 0.15s ease-out;
-`;
-
-const SearchButton = styled(StyledButton)`
-  border-radius: 0 10px 10px 0;
-`;
-
 const TemperatureUnitToggle = styled(StyledButton)`
   margin-right: 10px;
-  border-radius: 10px;
+  border-radius: 8px;
   color: #ffffff;
   font-size: 1.3em;
 
@@ -121,7 +104,7 @@ const TemperatureUnitToggle = styled(StyledButton)`
 `;
 const DarkModeToggleButton = styled(StyledButton)`
   width: 40px;
-  border-radius: 10px;
+  border-radius: 8px;
 
   ${({ $isDarkTheme }) => $isDarkTheme && `border: 1px solid #9e9e9e;`}
 `;
@@ -164,8 +147,8 @@ const ErrorText = styled.p`
     `}
 `;
 
-const HorizontalRule = styled.hr`
-  width: 90%;
+const Divider = styled.hr`
+  width: 100%;
   height: 1px;
   border: none;
   background: #fff;
@@ -185,10 +168,9 @@ const Header = ({
   selectedDayData,
   setIsMetric,
   setIsDarkTheme,
+  setSearchValue,
 }) => {
   const getTemperatureUnits = () => `°${isMetric ? "C" : "F"}`;
-
-  const [searchValue, setSearchValue] = useState({});
 
   const temperature = selectedDayData.main?.temp ?? "";
   let formattedDescription = "";
@@ -204,19 +186,13 @@ const Header = ({
 
   return (
     <HeaderContainer $isDarkTheme={isDarkTheme}>
-      <FormContainer onSubmit={(e) => e.preventDefault()}>
-        <Search
+      <FormContainer onSubmit={(e) => fetchWeatherData(e)}>
+        <SearchInput
           $isDarkTheme={isDarkTheme}
           placeholder="Search Locations"
           onChange={(e) => setSearchValue(e.target.value)}
         />
-        <SearchButton
-          disabled={!searchValue.length}
-          onClick={() => {
-            fetchWeatherData(searchValue);
-          }}
-          type="submit"
-        >
+        <SearchButton>
           <img src={search} alt="Search icon" />
         </SearchButton>
       </FormContainer>
@@ -224,7 +200,7 @@ const Header = ({
         Please select a different location.
       </ErrorText>
 
-      <HorizontalRule />
+      <Divider />
 
       <WeatherDataContainer>
         <TopLeft>{capitalizePhrase(locationName)}</TopLeft>

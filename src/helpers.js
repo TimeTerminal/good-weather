@@ -10,14 +10,22 @@ import {
  * @returns {string} The formatted phrase
  */
 export const capitalizePhrase = (phrase) => {
-  return phrase
-    .replace(new RegExp(/[-_]+/, "g"), " ")
-    .replace(new RegExp(/[^\w\s]/, "g"), "")
+  const [city, region] = phrase.split(",");
+
+  const formattedCity = city
     .replace(
       new RegExp(/\s+(.)(\w*)/, "g"),
-      ($1, $2, $3) => ` ${$2.toUpperCase() + $3.toLowerCase()}`
+      (_, $2, $3) => ` ${$2.toUpperCase() + $3.toLowerCase()}`
     )
     .replace(new RegExp(/\w/), (s) => s.toUpperCase());
+
+  let output = formattedCity;
+
+  if (region) {
+    output += `, ${region.toUpperCase()}`;
+  }
+
+  return output;
 };
 
 /**

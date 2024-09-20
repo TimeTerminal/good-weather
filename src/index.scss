@@ -3,6 +3,10 @@ $secondary-color: #212121;
 $tertiary-color: #adadad;
 $text-color: #fffffd;
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: $primary-color;
   color: $text-color;

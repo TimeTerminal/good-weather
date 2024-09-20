@@ -2,8 +2,8 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { round } from "lodash";
 
-import WeatherIcon from "./WeatherIcon";
-import { capitalizePhrase, getDayName } from "../util";
+import WeatherIcon from "../WeatherIcon";
+import { capitalizePhrase, getDayName } from "../../helpers";
 
 const DayContainer = styled.button`
   display: flex;
@@ -15,6 +15,7 @@ const DayContainer = styled.button`
   padding: 20px 0 15px;
   background: none;
   border: 1px solid #f5f5f5;
+  border-radius: 8px;
   cursor: pointer;
   transition: margin 0.15s ease-out, background 0.15s ease;
 
@@ -68,7 +69,7 @@ const Text = styled.p`
   color: #efefef;
 `;
 
-const DayColumn = ({
+const SingleDay = ({
   day,
   date,
   description,
@@ -99,4 +100,4 @@ const DayColumn = ({
   );
 };
 
-export default DayColumn;
+export default SingleDay;

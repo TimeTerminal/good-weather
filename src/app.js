@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import Header from "./components/Header";
-import DayColumns from "./components/DayColumns";
+import MultiDay from "./components/FutureForecast/MultiDay";
 import { API_URL, DAYS_TO_SHOW } from "./constants";
 
 const AppContainer = styled.div`
@@ -11,16 +11,59 @@ const AppContainer = styled.div`
   align-items: center;
   width: 100%;
   max-width: 1000px;
-  padding-bottom: 30px;
   background: ${({ $isDarkTheme }) => ($isDarkTheme ? "#1a1a24" : "#75bfcc")};
-  border: 20px ${({ $isDarkTheme }) => ($isDarkTheme ? "#2e2e2e" : "#f5f5f5")}
+  border: 2px ${({ $isDarkTheme }) => ($isDarkTheme ? "#2e2e2e" : "#f5f5f5")}
     solid;
+`;
+
+const Backdrop = styled.div`
+  width: 100%;
+  background-color: #4c4f72;
+  background-image: radial-gradient(
+    ellipse at bottom,
+    ${({ $isDarkTheme }) =>
+      $isDarkTheme
+        ? css`
+          #343853 0%,
+          #2c2e43 10%,
+          #20222f 30%,
+          #1a1a24 50%`
+        : css`
+          #b7e2e8 0%,
+          #98d4dc 10%,
+          #7ac6d3 30%,
+          #75bfcc 50%
+          `}
+  );
+`;
+
+const Layout = styled.div`
+  width: 100%;
+  padding: 20px 40px;
+
+  @media (max-width: 480px) {
+    padding: 20px 10px;
+  }
 `;
 
 const App = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [isMetric, setIsMetric] = useState(true);
+  const [searchValue, setSearchValue] = useState("Toronto");
   const [location, setLocation] = useState("Toronto");
+  const [viewportWidth, setViewportWidth] = useState(window.outerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.outerWidth);
+    };
+
+    window.visualViewport.addEventListener("resize", handleResize);
+
+    return () => {
+      window.visualViewport.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const [state, setState] = useState({
     error: false,
@@ -33,9 +76,9 @@ const App = () => {
   });
 
   const url = new URL(
-    `${API_URL}?q=${location}&appid=${process.env.OPEN_WEATHER_API_KEY}&units=${
-      isMetric ? "metric" : "imperial"
-    }`
+    `${API_URL}?q=${searchValue}&appid=${
+      process.env.OPEN_WEATHER_API_KEY
+    }&units=${isMetric ? "metric" : "imperial"}`
   );
 
   /**
@@ -82,7 +125,9 @@ const App = () => {
    * Fetches the weather data from the Open Weather Map API based on a passed location and sets the app state based on the fetched data. Upon receiving an error, loading is stopped and `state.error` is set to `true`.
    * @param {string} location eg. "Moscow", "New York", "Hawaii", etc
    */
-  const fetchWeatherData = async (location) => {
+  const fetchWeatherData = async (event, newLocation = null) => {
+    event?.preventDefault();
+
     if (!getPrevious) {
       setState({
         ...state,
@@ -94,10 +139,6 @@ const App = () => {
     const jsonData = await openWeatherResponse.json();
 
     if (jsonData.cod !== "200") {
-      if (jsonData.cod === "404") {
-        setLocation(getPrevious.location);
-      }
-
       return setState({
         ...state,
         error: true,
@@ -107,7 +148,7 @@ const App = () => {
 
     const fiveDayData = parseAPIResponse(jsonData);
 
-    setLocation(location);
+    setLocation(searchValue);
 
     setState({
       ...state,
@@ -134,29 +175,35 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchWeatherData(location);
+    fetchWeatherData();
   }, [isMetric]);
 
   return (
     <AppContainer $isDarkTheme={isDarkTheme}>
-      <Header
-        isDarkTheme={isDarkTheme}
-        fetchWeatherData={fetchWeatherData}
-        isMetric={isMetric}
-        isError={state.error}
-        loading={state.loading}
-        locationName={location}
-        selectedDayData={state.selectedDay.data}
-        setIsDarkTheme={setIsDarkTheme}
-        setIsMetric={setIsMetric}
-      />
-      <DayColumns
-        isDarkTheme={isDarkTheme}
-        fiveDayData={state.fiveDayData}
-        loading={state.loading}
-        selectedDayId={state.selectedDay.index}
-        setSelectedDay={setSelectedDay}
-      />
+      <Backdrop $isDarkTheme={isDarkTheme}>
+        <Layout>
+          <Header
+            isDarkTheme={isDarkTheme}
+            fetchWeatherData={fetchWeatherData}
+            isMetric={isMetric}
+            isError={state.error}
+            loading={state.loading}
+            locationName={location}
+            selectedDayData={state.selectedDay.data}
+            setIsDarkTheme={setIsDarkTheme}
+            setIsMetric={setIsMetric}
+            setSearchValue={setSearchValue}
+          />
+          <MultiDay
+            isDarkTheme={isDarkTheme}
+            fiveDayData={state.fiveDayData}
+            loading={state.loading}
+            selectedDayId={state.selectedDay.index}
+            setSelectedDay={setSelectedDay}
+            viewportWidth={viewportWidth}
+          />
+        </Layout>
+      </Backdrop>
     </AppContainer>
   );
 };
