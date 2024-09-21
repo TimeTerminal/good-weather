@@ -2,6 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { round } from "lodash";
 
+import { RESPONSIVE_SIZES } from "../../constants";
 import WeatherIcon from "../WeatherIcon";
 import { capitalizePhrase, getDayName } from "../../helpers";
 
@@ -19,28 +20,38 @@ const DayContainer = styled.button`
   cursor: pointer;
   transition: margin 0.15s ease-out, background 0.15s ease;
 
+  &:hover {
+    margin-top: 0;
+    background: linear-gradient(
+      to bottom,
+      ${({ $isDarkTheme }) =>
+        $isDarkTheme ? "#005bc1 0%, #004186 100%" : "#032045 0%, #011127 100%"}
+    );
+  }
+
   ${({ $isDarkTheme, selected }) =>
-    selected
-      ? css`
-          margin-top: 0;
-          background: radial-gradient(
-            ellipse at top,
-            ${$isDarkTheme
-              ? "#4c4f72 10%, #343853 80%"
-              : "#7ac6d3 10%, #67979f 90%"}
-          );
-        `
-      : css`
-          &:hover {
-            margin-top: 0;
-            background: radial-gradient(
-              ellipse at top,
-              ${$isDarkTheme
-                ? "#4c4f72 10%, #343853 80%"
-                : "#7ac6d3 10%, #67979f 90%"}
-            );
-          }
-        `}
+    selected &&
+    css`
+      margin-top: 0;
+      background: linear-gradient(
+        to bottom,
+        ${$isDarkTheme
+          ? "#005bc1 0%, #004186 100%"
+          : "#032045 0%, #011127 100%"}
+      );
+    `}
+
+  @media (max-width: ${RESPONSIVE_SIZES.DESKTOP}px) {
+    margin: 0;
+    padding: 10px;
+    min-width: 100px;
+    border-radius: 0;
+    border-width: 0;
+
+    &:not(:first-of-type) {
+      border-width: 0 0 0 1px;
+    }
+  }
 `;
 
 const Title = styled.h3`
@@ -58,9 +69,13 @@ const Subtitle = styled.h4`
 `;
 
 const Icon = styled(WeatherIcon)`
-  width: 55px;
+  width: 4em;
   margin: 5px 0 20px;
   background: none;
+
+  @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
+    width: 2em;
+  }
 `;
 
 const Text = styled.p`
@@ -95,7 +110,7 @@ const SingleDay = ({
       <Icon main={main} description={formattedDescription} />
       <Text>Low: {round(tempDayLow)}&#176;</Text>
       <Text>High: {round(tempDayHigh)}&#176;</Text>
-      <Text>POP: {precipitationProbability * 100}%</Text>
+      <Text>POP: {round(precipitationProbability * 100)}%</Text>
     </DayContainer>
   );
 };

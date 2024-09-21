@@ -14,7 +14,7 @@ const Icon = styled.img`
   width: ${({ $headerImage }) => ($headerImage ? "70px" : "55px")};
   margin: ${({ $headerImage }) => ($headerImage ? "0 15px 0 0" : "5px 0 20px")};
   background: none;
-  transition: 1.5s ease;
+  transition: 0.5s ease;
 
   ${({ $headerImage, $main }) =>
     $main &&
@@ -82,7 +82,7 @@ const getIconName = (description) => {
   }
 };
 
-const WeatherIcon = ({ description, headerImage, main }) => {
+const WeatherIcon = ({ description, headerImage, main, ...props }) => {
   const iconDict = {
     sun,
     cloud,
@@ -101,6 +101,7 @@ const WeatherIcon = ({ description, headerImage, main }) => {
       alt={`Weather icon - ${description}`}
       $main={main}
       $headerImage={headerImage}
+      {...props}
     />
   );
 };

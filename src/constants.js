@@ -6,5 +6,7 @@ module.exports = Object.freeze({
   METER_TO_KM_MULTIPLIER: 0.001,
   RESPONSIVE_SIZES: {
     MOBILE: 480,
+    TABLET: 600,
+    DESKTOP: 900,
   },
 });

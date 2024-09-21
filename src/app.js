@@ -3,45 +3,39 @@ import styled, { css } from "styled-components";
 
 import Header from "./components/Header";
 import MultiDay from "./components/FutureForecast/MultiDay";
-import { API_URL, DAYS_TO_SHOW } from "./constants";
+import { API_URL, DAYS_TO_SHOW, RESPONSIVE_SIZES } from "./constants";
 
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1000px;
-  background: ${({ $isDarkTheme }) => ($isDarkTheme ? "#1a1a24" : "#75bfcc")};
-  border: 2px ${({ $isDarkTheme }) => ($isDarkTheme ? "#2e2e2e" : "#f5f5f5")}
-    solid;
+  height: 100%;
 `;
 
 const Backdrop = styled.div`
   width: 100%;
+  height: 100%;
   background-color: #4c4f72;
-  background-image: radial-gradient(
-    ellipse at bottom,
+  background-image: linear-gradient(
+    to bottom,
     ${({ $isDarkTheme }) =>
-      $isDarkTheme
-        ? css`
-          #343853 0%,
-          #2c2e43 10%,
-          #20222f 30%,
-          #1a1a24 50%`
-        : css`
-          #b7e2e8 0%,
-          #98d4dc 10%,
-          #7ac6d3 30%,
-          #75bfcc 50%
-          `}
+      $isDarkTheme ? "#001b6f 0%, #001432 100%" : "#07f, #005bb5"}
   );
 `;
 
 const Layout = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   padding: 20px 40px;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${RESPONSIVE_SIZES.TABLET}px) {
+    padding: 20px 20px;
+  }
+
+  @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
     padding: 20px 10px;
   }
 `;
@@ -125,7 +119,7 @@ const App = () => {
    * Fetches the weather data from the Open Weather Map API based on a passed location and sets the app state based on the fetched data. Upon receiving an error, loading is stopped and `state.error` is set to `true`.
    * @param {string} location eg. "Moscow", "New York", "Hawaii", etc
    */
-  const fetchWeatherData = async (event, newLocation = null) => {
+  const fetchWeatherData = async (event) => {
     event?.preventDefault();
 
     if (!getPrevious) {

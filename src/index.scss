@@ -1,15 +1,29 @@
-$primary-color: #292929;
-$secondary-color: #212121;
-$tertiary-color: #adadad;
-$text-color: #fffffd;
+:root {
+  // Dark mode
+  --background: #1c1c1c;
+  --text: #f3f3f3;
+  --title: #0078ff;
+  --cardBg: rgba(2, 20, 46, 0.5);
+
+  // Light mode
+  --lightModeBg: #f5f5f5;
+  --lightModeText: #f5f5f5;
+  --lightModeTitle: #fdd87d;
+  --lightModeCardBg: rgba(2, 20, 46, 0.5);
+}
+
+html {
+  height: 100%;
+}
 
 * {
   box-sizing: border-box;
 }
 
 body {
-  background-color: $primary-color;
-  color: $text-color;
+  height: 100%;
   margin: 0;
+  background-color: var(--primaryDark);
+  color: var(--primaryLight);
   font-family: "Segoe UI", "Roboto", "Cantarell", "Helvetica Neue", sans-serif;
 }

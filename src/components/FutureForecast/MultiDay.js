@@ -6,14 +6,25 @@ import { RESPONSIVE_SIZES } from "../../constants";
 
 const MultiDayContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  max-width: 100%;
-  background: #292929;
-  border-radius: 8px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  width: max-content;
   margin-top: 20px;
   padding: 20px;
+  background: rgba(2, 20, 46, 0.5);
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
+    rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+    rgba(0, 0, 0, 0.25) 0px 0px 0px 1px inset;
+
+  @media (max-width: ${RESPONSIVE_SIZES.TABLET}px) {
+    padding: 10px;
+  }
+
+  @media (max-width: 560px) {
+    justify-content: left;
+    width: 100%;
+    overflow-x: scroll;
+  }
 `;
 
 const renderAllColumns = ({ fiveDayData, viewportWidth, ...props }) => {

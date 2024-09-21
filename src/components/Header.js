@@ -2,8 +2,9 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { round } from "lodash";
 
-import WeatherIcon from "./WeatherIcon";
+import { RESPONSIVE_SIZES } from "../constants";
 import { capitalizePhrase, getWindCategory } from "../helpers";
+import WeatherIcon from "./WeatherIcon";
 import search from "/assets/images/search.svg";
 import moon from "/assets/images/moon.svg";
 import sun from "/assets/images/sun.svg";
@@ -32,29 +33,63 @@ const StyledButton = styled.button`
     background: radial-gradient(
       ellipse at top,
       ${({ $isDarkTheme }) =>
-        $isDarkTheme ? "#4c4f72 10%, #343853 80%" : "#7ac6d3 10%,#67979f 90%"}
+        $isDarkTheme ? "#4c4f72 10%, #343853 80%" : "#7ac6d3 10%, #67979f 90%"}
     );
   }
 `;
 
-const FormContainer = styled.form`
+const Form = styled.form`
   display: flex;
-  justify-content: center;
+  background-color: var(--cardBg);
+  border-radius: 8px;
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
 `;
 
 const SearchInput = styled.input`
   padding: 4px 10px;
-  background-color: ${({ $isDarkTheme }) =>
-    $isDarkTheme ? "#2d2e2f" : "#f5f5f5"};
-  color: ${({ $isDarkTheme }) => ($isDarkTheme ? "#f5f5f5" : "#1a1a24")};
+  background: none;
+  color: var(
+    --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
+  );
   font-size: 14px;
   border: 1px solid white;
+  border-right: 0;
   border-radius: 8px 0 0 8px;
   transition: 0.15s ease-out;
+
+  &::placeholder {
+    font-weight: 200;
+  }
 `;
 
 const SearchButton = styled(StyledButton)`
   border-radius: 0 8px 8px 0;
+`;
+
+const ErrorText = styled.p`
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  opacity: 0;
+  transform: scaleY(0);
+  transition: transform 0.1s ease, opacity 0.4s ease;
+
+  ${({ $isError }) =>
+    $isError &&
+    css`
+      opacity: 1;
+      transform: scaleY(1);
+    `}
+`;
+
+const Divider = styled.hr`
+  width: 100%;
+  border: 0.5px solid #f5f5f5;
 `;
 
 // ====================
@@ -65,8 +100,6 @@ const WeatherDataContainer = styled.div`
   grid-template: repeat(3, 0.5fr) / 33% 33% 33%;
 `;
 const TopLeft = styled.span`
-  display: flex;
-  align-items: center;
   grid-column: 1 / 2;
   grid-row: 1;
   font-size: 1.4em;
@@ -109,52 +142,54 @@ const DarkModeToggleButton = styled(StyledButton)`
   ${({ $isDarkTheme }) => $isDarkTheme && `border: 1px solid #9e9e9e;`}
 `;
 
-const Title = styled.h3`
+const City = styled.h3`
+  color: var(
+    --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
+  );
+`;
+
+const Title = styled.h1`
   margin: 0;
-  color: ${({ $isDarkTheme }) => ($isDarkTheme ? "#c2dbfa" : "#fdd87d")};
+  color: ${({ $isDarkTheme }) =>
+    $isDarkTheme ? "var(--title)" : "var(--lightModeTitle)"};
   font-size: 5em;
   font-weight: bold;
   line-height: 1;
+
+  @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
+    font-size: 6em;
+  }
 `;
 
-const Subtitle = styled.h4`
-  margin: 0 0 10px;
+const Subtitle = styled.h2`
+  margin: 0;
+  color: var(
+    --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
+  );
   font-size: 1.2em;
   font-weight: normal;
 `;
 
-const Text = styled.p`
-  margin: 8px 0 0;
-  color: ${({ $isDarkTheme }) => ($isDarkTheme ? "#9e9e9e" : "#fffffd")};
+const HeaderText = styled.p`
+  margin: 10px 0 0;
+  color: var(
+    --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
+  );
   font-size: 1.1em;
+  font-weight: 200;
   line-height: 1.3em;
   text-decoration: none;
+
+  &:first-of-type {
+    margin: 20px 0 0;
+  }
+
+  @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
+    font-size: 1em;
+  }
 `;
 
-const ErrorText = styled.p`
-  display: flex;
-  justify-content: center;
-  margin: 0;
-  opacity: 0;
-  transform: scaleY(0);
-  transition: transform 0.1s ease, opacity 0.4s ease;
-
-  ${({ $isError }) =>
-    $isError &&
-    css`
-      opacity: 1;
-      transform: scaleY(1);
-    `}
-`;
-
-const Divider = styled.hr`
-  width: 100%;
-  height: 1px;
-  border: none;
-  background: #fff;
-`;
-
-const Temperature = styled.sup`
+const TemperatureUnits = styled.sup`
   font-size: 0.5em;
 `;
 
@@ -173,6 +208,7 @@ const Header = ({
   const getTemperatureUnits = () => `°${isMetric ? "C" : "F"}`;
 
   const temperature = selectedDayData.main?.temp ?? "";
+  const feelsLike = selectedDayData.main?.feels_like ?? "";
   let formattedDescription = "";
   let main = null;
 
@@ -184,18 +220,33 @@ const Header = ({
     main = selectedDayData.weather[0].main;
   }
 
+  const renderFeelsLike = () => {
+    if (feelsLike && feelsLike !== temperature) {
+      return (
+        <>
+          Feels like {round(selectedDayData.main.feels_like)}
+          <TemperatureUnits>{getTemperatureUnits()}</TemperatureUnits>
+        </>
+      );
+    }
+
+    return <></>;
+  };
+
   return (
     <HeaderContainer $isDarkTheme={isDarkTheme}>
-      <FormContainer onSubmit={(e) => fetchWeatherData(e)}>
-        <SearchInput
-          $isDarkTheme={isDarkTheme}
-          placeholder="Search Locations"
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-        <SearchButton>
-          <img src={search} alt="Search icon" />
-        </SearchButton>
-      </FormContainer>
+      <SearchContainer>
+        <Form onSubmit={(e) => fetchWeatherData(e)}>
+          <SearchInput
+            $isDarkTheme={isDarkTheme}
+            placeholder="Enter Location"
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+          <SearchButton $isDarkTheme={isDarkTheme}>
+            <img src={search} alt="Search icon" />
+          </SearchButton>
+        </Form>
+      </SearchContainer>
       <ErrorText $isError={isError}>
         Please select a different location.
       </ErrorText>
@@ -203,7 +254,11 @@ const Header = ({
       <Divider />
 
       <WeatherDataContainer>
-        <TopLeft>{capitalizePhrase(locationName)}</TopLeft>
+        <TopLeft>
+          <City $isDarkTheme={isDarkTheme}>
+            {capitalizePhrase(locationName)}
+          </City>
+        </TopLeft>
         <TopRight>
           <TemperatureUnitToggle
             onClick={() => {
@@ -235,27 +290,26 @@ const Header = ({
               />
               <Title $isDarkTheme={isDarkTheme}>
                 {round(temperature)}
-                <Temperature>{getTemperatureUnits()}</Temperature>
+                <TemperatureUnits>{getTemperatureUnits()}</TemperatureUnits>
               </Title>
             </Center>
             <Bottom>
-              <Subtitle>
-                {selectedDayData?.weather && formattedDescription}, Feels like{" "}
-                {selectedDayData.main && round(selectedDayData.main.feels_like)}
-                <Temperature>{getTemperatureUnits()}</Temperature>
+              <Subtitle $isDarkTheme={isDarkTheme}>
+                {renderFeelsLike()}
+                {selectedDayData?.weather && `, ${formattedDescription}`}
               </Subtitle>
-              <Text $isDarkTheme={isDarkTheme}>
+              <HeaderText $isDarkTheme={isDarkTheme}>
                 {`${
-                  selectedDayData?.pop && selectedDayData.pop * 100
+                  selectedDayData?.pop && round(selectedDayData.pop * 100)
                 }% chance of rain`}
-              </Text>
-              <Text $isDarkTheme={isDarkTheme}>
+              </HeaderText>
+              <HeaderText $isDarkTheme={isDarkTheme}>
                 {selectedDayData.wind &&
                   getWindCategory(selectedDayData.wind.speed, isMetric)}
-              </Text>
-              <Text $isDarkTheme={isDarkTheme}>
+              </HeaderText>
+              <HeaderText $isDarkTheme={isDarkTheme}>
                 {`${selectedDayData?.main?.humidity}% Humidity`}
-              </Text>
+              </HeaderText>
             </Bottom>
           </>
         )}
