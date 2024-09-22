@@ -6,8 +6,9 @@
   "main": "index.js",
   "private": true,
   "scripts": {
+    "build": "webpack --mode=development",
     "dev": "webpack serve",
-    "build": "webpack --mode=development"
+    "deploy": "firebase deploy --project good-weather-d60d7"
   },
   "dependencies": {
     "firebase": "^10.13.2",
