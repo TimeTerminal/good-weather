@@ -1,15 +1,15 @@
 import {
   HOURS_TO_SECONDS_MULTIPLIER,
-  KM_TO_MILES_MULTIPLIER,
   METER_TO_KM_MULTIPLIER,
+  KM_TO_MILES_MULTIPLIER,
 } from "./constants";
 
 /**
  * Capitalizes each word within a given phrase
- * @param {string} phrase The phrase to capitalize
- * @returns {string} The formatted phrase
+ * @param phrase The phrase to capitalize
+ * @returns The formatted phrase
  */
-export const capitalizePhrase = (phrase) => {
+export const capitalizePhrase = (phrase: string) => {
   const [city, region] = phrase.split(",");
 
   const formattedCity = city
@@ -30,19 +30,17 @@ export const capitalizePhrase = (phrase) => {
 
 /**
  * Round a given floating-point temperature to the nearest integer
- * @param {number} temperature
- * @returns {number} Rounded integer
+ * @param temperature
+ * @returns Rounded integer
  */
-export const formatTemperature = (temperature) => {
-  return Math.round10(temperature.round);
+export const formatTemperature = (temperature: number): number => {
+  return Math.round(temperature);
 };
 
 /**
- * Return the corresponding day name associated with its number in the week (starting at index 0)
- * @param {number} dayNum
- * @returns {string}
+ * Returns the corresponding day name associated with its number in the week (starting at index 0 for Sunday)
  */
-export const getDayName = (dayNum) => {
+export const getDayName = (dayNum: number): string => {
   switch (dayNum) {
     case 0:
       return "Sun";
@@ -56,18 +54,21 @@ export const getDayName = (dayNum) => {
       return "Thu";
     case 5:
       return "Fri";
-    case 6:
+    default:
       return "Sat";
   }
 };
 
 /**
  * Return the corresponding wind category for a given wind speed
- * @param {number} windSpeed The speed to compare against
- * @param {boolean} isMetric Used to check whether the passed wind speed is in Metric or Imperial units
- * @returns {string} Wind category, eg. "Light breeze", "Strong gale", etc
+ * @param windSpeed The speed to compare against
+ * @param isMetric Used to check whether the passed wind speed is in Metric or Imperial units
+ * @returns Wind category, eg. "Light breeze", "Strong gale", etc
  */
-export const getWindCategory = (windSpeed, isMetric) => {
+export const getWindCategory = (
+  windSpeed: number,
+  isMetric: boolean
+): string => {
   const windInKmPH = isMetric
     ? windSpeed * METER_TO_KM_MULTIPLIER * HOURS_TO_SECONDS_MULTIPLIER
     : windSpeed * KM_TO_MILES_MULTIPLIER;
@@ -100,4 +101,6 @@ export const getWindCategory = (windSpeed, isMetric) => {
     case windInKmPH > 117 && windInKmPH <= 1000:
       return "Hurricane";
   }
+
+  return "";
 };

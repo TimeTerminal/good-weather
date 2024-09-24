@@ -10,23 +10,24 @@ import mist from "../images/icons/mist.svg";
 import sun from "../images/icons/sun.svg";
 import wind from "../images/icons/wind.svg";
 
-const Icon = styled.img`
-  width: ${({ $headerImage }) => ($headerImage ? "70px" : "55px")};
-  margin: ${({ $headerImage }) => ($headerImage ? "0 15px 0 0" : "5px 0 20px")};
+const Icon = styled.img<StyledWeatherIcon>`
+  width: ${({ $isHeaderImage }) => ($isHeaderImage ? "70px" : "55px")};
+  margin: ${({ $isHeaderImage }) =>
+    $isHeaderImage ? "0 15px 0 0" : "5px 0 20px"};
   background: none;
   transition: 0.5s ease;
 
-  ${({ $headerImage, $main }) =>
-    $main &&
+  ${({ $isHeaderImage, $iconName }) =>
+    $iconName &&
     css`
       filter: drop-shadow(
-        0 ${$headerImage ? "0" : "10px"} 10px
-          rgb(${handleIconColour($main)}, 0.8)
+        0 ${$isHeaderImage ? "0" : "10px"} 10px
+          rgb(${handleIconColour($iconName)}, 0.8)
       );
     `}
 `;
 
-const handleIconColour = (main) => {
+const handleIconColour = (main: string) => {
   switch (main) {
     case "Clear":
     case "Thunderstorm":
@@ -52,7 +53,7 @@ const handleIconColour = (main) => {
   }
 };
 
-const getIconName = (description) => {
+const getIconName = (description: string) => {
   switch (description) {
     case "Clear":
       return "sun";
@@ -82,7 +83,12 @@ const getIconName = (description) => {
   }
 };
 
-const WeatherIcon = ({ description, headerImage, main, ...props }) => {
+const WeatherIcon: React.FC<WeatherIcon> = ({
+  description,
+  isHeaderImage,
+  iconName,
+  ...props
+}) => {
   const iconDict = {
     sun,
     cloud,
@@ -93,14 +99,14 @@ const WeatherIcon = ({ description, headerImage, main, ...props }) => {
     mist,
     wind,
   };
-  const weatherIconPath = iconDict[getIconName(main)];
+  const weatherIconPath = iconDict[getIconName(iconName)];
 
   return (
     <Icon
-      src={weatherIconPath}
+      src={weatherIconPath as string}
       alt={`Weather icon - ${description}`}
-      $main={main}
-      $headerImage={headerImage}
+      $iconName={iconName}
+      $isHeaderImage={isHeaderImage ?? false}
       {...props}
     />
   );

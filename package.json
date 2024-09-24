@@ -3,10 +3,10 @@
   "author": "TimeTerminal (https://github.com/TimeTerminal)",
   "version": "1.0.0",
   "license": "ISC",
-  "main": "index.js",
+  "main": "src/index.tsx",
   "private": true,
   "scripts": {
-    "build": "webpack --mode=development",
+    "build": "tsc && webpack",
     "dev": "webpack serve",
     "deploy": "firebase deploy --project good-weather-d60d7"
   },
@@ -23,8 +23,10 @@
     "@babel/preset-env": "^7.24.5",
     "@babel/preset-react": "^7.24.1",
     "@babel/preset-typescript": "^7.24.7",
+    "@types/lodash": "^4.17.7",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
+    "@types/styled-components": "^5.1.34",
     "@webpack-cli/generators": "^3.0.7",
     "babel-loader": "^9.1.3",
     "css-loader": "^7.1.1",

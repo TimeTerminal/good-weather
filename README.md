@@ -24,7 +24,7 @@ Mobile view:
 - Create a `.env` file in the root directory and add env variables following the `.env.example` file
 
 ## Build
-- `npm run build` - builds to the {root}/dist folder
+- `npm run build` - compiles the TypeScript code and bundles it to the {root}/dist folder
 
 ## Deploy
 - Login and authenticate with firebase

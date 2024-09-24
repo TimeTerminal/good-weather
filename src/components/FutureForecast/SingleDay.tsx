@@ -6,7 +6,7 @@ import { RESPONSIVE_SIZES } from "../../constants";
 import WeatherIcon from "../WeatherIcon";
 import { capitalizePhrase, getDayName } from "../../helpers";
 
-const DayContainer = styled.button`
+const DayContainer = styled.button<DayContainer>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,17 +61,15 @@ const Title = styled.h3`
   color: #f5f5f5;
 `;
 
-const Subtitle = styled.h4`
+const Subtitle = styled.h4<ThemableElement>`
   margin: 0 0 10px;
   color: ${({ $isDarkTheme }) => ($isDarkTheme ? "#9e9e9e" : "#f5f5f5")};
   font-size: 1.5em;
   font-weight: lighter;
 `;
 
-const Icon = styled(WeatherIcon)`
+const Icon = styled(WeatherIcon)<WeatherIcon>`
   width: 4em;
-  margin: 5px 0 20px;
-  background: none;
 
   @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
     width: 2em;
@@ -84,7 +82,7 @@ const Text = styled.p`
   color: #efefef;
 `;
 
-const SingleDay = ({
+const SingleDay: React.FC<SingleDay> = ({
   day,
   date,
   description,
@@ -106,8 +104,8 @@ const SingleDay = ({
       onClick={() => setSelectedDay(selectedDayId, id)}
     >
       <Title>{getDayName(day)}</Title>
-      <Subtitle $darkTheme={isDarkTheme}>{date}</Subtitle>
-      <Icon main={main} description={formattedDescription} />
+      <Subtitle $isDarkTheme={isDarkTheme}>{date}</Subtitle>
+      <Icon iconName={main} description={formattedDescription} />
       <Text>Low: {round(tempDayLow)}&#176;</Text>
       <Text>High: {round(tempDayHigh)}&#176;</Text>
       <Text>POP: {round(precipitationProbability * 100)}%</Text>

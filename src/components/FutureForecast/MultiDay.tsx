@@ -23,7 +23,7 @@ const Section = styled.div`
   }
 `;
 
-const SectionTitle = styled.h4`
+const SectionTitle = styled.h4<ThemableElement>`
   margin: 0;
   color: var(
     --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
@@ -42,43 +42,49 @@ const MultiDayContainer = styled.div`
   }
 `;
 
-const renderAllColumns = ({ fiveDayData, viewportWidth, ...props }) => {
-  const createDate = (apiDate) => {
-    const dateObj = new Date(apiDate);
+const createDate = (apiDate: string, viewportWidth: number) => {
+  const dateObj = new Date(apiDate);
 
-    const day = dateObj.getDay();
-    const date = dateObj.toLocaleString("en-US", {
-      month: viewportWidth > RESPONSIVE_SIZES.MOBILE ? "short" : "2-digit",
-      day: "numeric",
-    });
+  const day = dateObj.getDay();
+  const date = dateObj.toLocaleString("en-US", {
+    month: viewportWidth > RESPONSIVE_SIZES.MOBILE ? "short" : "2-digit",
+    day: "numeric",
+  });
 
-    return { date, day };
-  };
+  return { date, day };
+};
 
-  const days = fiveDayData.map((dayData, index) => {
+const renderAllColumns = ({
+  fiveDayData,
+  viewportWidth,
+  ...props
+}: {
+  fiveDayData: SingleDayData[];
+  viewportWidth: number;
+}) => {
+  const days = fiveDayData.map((dayData: SingleDayData, index: number) => {
     const {
       dt_txt,
-      main: { feels_like, temp_min, temp_max },
+      main: { temp_min, temp_max },
       pop,
       weather: {
         [0]: { main, description },
       },
     } = dayData;
-    const { date, day } = createDate(dt_txt);
+    const { date, day } = createDate(dt_txt, viewportWidth);
 
     return (
       <SingleDay
-        key={dt_txt}
         date={date}
         day={day}
         description={description}
-        feelsLike={feels_like}
         id={index}
+        key={dt_txt}
         main={main}
         precipitationProbability={pop}
         tempDayLow={temp_min}
         tempDayHigh={temp_max}
-        {...props}
+        {...props as MultiDay}
       />
     );
   });
@@ -86,7 +92,7 @@ const renderAllColumns = ({ fiveDayData, viewportWidth, ...props }) => {
   return days;
 };
 
-const MultiDay = (props) => {
+const MultiDay: React.FC<MultiDay> = (props) => {
   return (
     <Section>
       <SectionTitle $isDarkTheme={props.isDarkTheme}>

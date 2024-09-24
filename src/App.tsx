@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 import Header from "./components/Header";
 import MultiDay from "./components/FutureForecast/MultiDay";
@@ -13,7 +13,7 @@ const AppContainer = styled.div`
   height: 100%;
 `;
 
-const Backdrop = styled.div`
+const Backdrop = styled.div<ThemableElement>`
   width: 100%;
   height: 100%;
   background-color: #4c4f72;
@@ -52,14 +52,20 @@ const App = () => {
       setViewportWidth(window.outerWidth);
     };
 
-    window.visualViewport.addEventListener("resize", handleResize);
+    (window.visualViewport as VisualViewport).addEventListener(
+      "resize",
+      handleResize
+    );
 
     return () => {
-      window.visualViewport.removeEventListener("resize", handleResize);
+      (window.visualViewport as VisualViewport).removeEventListener(
+        "resize",
+        handleResize
+      );
     };
   }, []);
 
-  const [state, setState] = useState({
+  const [state, setState] = useState<AppState>({
     error: false,
     fiveDayData: [],
     loading: false,
@@ -77,25 +83,30 @@ const App = () => {
 
   /**
    * Retains a passed value to be used later for comparison purposes.
-   * @param {any} value The value to save
-   * @returns {any} The current version of that value
+   * @param value The value to save
+   * @returns The current version of that value
    */
-  const usePreviousLocation = (value) => {
-    const ref = useRef();
+  const usePreviousLocation = (value: {
+    location: string;
+  }): { location: string } => {
+    const ref = useRef<object>();
+
     useEffect(() => {
       ref.current = value;
     });
-    return ref.current;
+    return ref.current as { location: string };
   };
 
   const getPrevious = usePreviousLocation({ location });
 
   /**
    * API response parser called by `fetchWeatherData` upon successful weather data being received.
-   * @param {object} returnedData Weather data returned by the Open Weather Map API
-   * @returns {object} Filtered weather data belonging to the first timestamp from each day
+   * @param returnedData Weather data returned by the Open Weather Map API
+   * @returns Filtered weather data belonging to the first timestamp from each day
    */
-  const parseAPIResponse = (returnedData) => {
+  const parseAPIResponse = (returnedData: {
+    list: SingleDayData[];
+  }): SingleDayData[] => {
     const filteredData = [];
     let currentDay = null;
 
@@ -112,14 +123,15 @@ const App = () => {
       }
     }
 
+    console.log("filteredData :>> ", filteredData);
+
     return filteredData;
   };
 
   /**
-   * Fetches the weather data from the Open Weather Map API based on a passed location and sets the app state based on the fetched data. Upon receiving an error, loading is stopped and `state.error` is set to `true`.
-   * @param {string} location eg. "Moscow", "New York", "Hawaii", etc
+   * Fetches the weather data from the Open Weather Map API based on the set location and sets the app state based on the fetched data. Upon receiving an error, loading is stopped and `state.error` is set to `true`.
    */
-  const fetchWeatherData = async (event) => {
+  const fetchWeatherData: FetchWeatherData = async (event) => {
     event?.preventDefault();
 
     if (!getPrevious) {
@@ -156,7 +168,10 @@ const App = () => {
     });
   };
 
-  const setSelectedDay = (currentIndex, newIndex) => {
+  const setSelectedDay: SetSelectedDay = (
+    currentIndex: number,
+    newIndex: number
+  ) => {
     if (currentIndex !== newIndex) {
       setState({
         ...state,
@@ -173,17 +188,17 @@ const App = () => {
   }, [isMetric]);
 
   return (
-    <AppContainer $isDarkTheme={isDarkTheme}>
+    <AppContainer>
       <Backdrop $isDarkTheme={isDarkTheme}>
         <Layout>
           <Header
-            isDarkTheme={isDarkTheme}
             fetchWeatherData={fetchWeatherData}
+            isDarkTheme={isDarkTheme}
             isMetric={isMetric}
             isError={state.error}
-            loading={state.loading}
             locationName={location}
-            selectedDayData={state.selectedDay.data}
+            loading={state.loading}
+            selectedDayData={state.selectedDay.data as SingleDayData}
             setIsDarkTheme={setIsDarkTheme}
             setIsMetric={setIsMetric}
             setSearchValue={setSearchValue}

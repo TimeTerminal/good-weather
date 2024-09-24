@@ -17,7 +17,7 @@ const HeaderContainer = styled.div`
   transition: all 0.3s ease;
 `;
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<ThemableElement>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,7 +50,7 @@ const SearchContainer = styled.div`
   width: 100%;
 `;
 
-const SearchInput = styled.input`
+const SearchInput = styled.input<ThemableElement>`
   padding: 4px 10px;
   background: none;
   color: var(
@@ -71,7 +71,7 @@ const SearchButton = styled(StyledButton)`
   border-radius: 0 8px 8px 0;
 `;
 
-const ErrorText = styled.p`
+const ErrorText = styled.p<ErrorText>`
   display: flex;
   justify-content: center;
   margin: 0;
@@ -142,13 +142,13 @@ const DarkModeToggleButton = styled(StyledButton)`
   ${({ $isDarkTheme }) => $isDarkTheme && `border: 1px solid #9e9e9e;`}
 `;
 
-const City = styled.h3`
+const City = styled.h3<ThemableElement>`
   color: var(
     --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
   );
 `;
 
-const Title = styled.h1`
+const Title = styled.h1<ThemableElement>`
   margin: 0;
   color: ${({ $isDarkTheme }) =>
     $isDarkTheme ? "var(--title)" : "var(--lightModeTitle)"};
@@ -161,7 +161,7 @@ const Title = styled.h1`
   }
 `;
 
-const Subtitle = styled.h2`
+const Subtitle = styled.h2<ThemableElement>`
   margin: 0;
   color: var(
     --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
@@ -170,7 +170,7 @@ const Subtitle = styled.h2`
   font-weight: normal;
 `;
 
-const HeaderText = styled.p`
+const HeaderText = styled.p<ThemableElement>`
   margin: 10px 0 0;
   color: var(
     --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
@@ -193,16 +193,16 @@ const TemperatureUnits = styled.sup`
   font-size: 0.5em;
 `;
 
-const Header = ({
+const Header: React.FC<Header> = ({
   isDarkTheme,
   fetchWeatherData,
   isError,
   isMetric,
-  loading,
   locationName,
+  loading,
   selectedDayData,
-  setIsMetric,
   setIsDarkTheme,
+  setIsMetric,
   setSearchValue,
 }) => {
   const getTemperatureUnits = () => `°${isMetric ? "C" : "F"}`;
@@ -234,7 +234,7 @@ const Header = ({
   };
 
   return (
-    <HeaderContainer $isDarkTheme={isDarkTheme}>
+    <HeaderContainer>
       <SearchContainer>
         <Form onSubmit={(e) => fetchWeatherData(e)}>
           <SearchInput
@@ -243,7 +243,7 @@ const Header = ({
             onChange={(e) => setSearchValue(e.target.value)}
           />
           <SearchButton $isDarkTheme={isDarkTheme}>
-            <img src={search} alt="Search icon" />
+            <img src={search as string} alt="Search icon" />
           </SearchButton>
         </Form>
       </SearchContainer>
@@ -275,7 +275,7 @@ const Header = ({
             $isDarkTheme={isDarkTheme}
           >
             <img
-              src={isDarkTheme ? sun : moon}
+              src={(isDarkTheme ? sun : moon) as string}
               alt="Toggle dark mode - moon icon"
             />
           </DarkModeToggleButton>
@@ -284,8 +284,8 @@ const Header = ({
           <>
             <Center>
               <WeatherIcon
-                main={main}
-                headerImage
+                iconName={main as string}
+                isHeaderImage
                 description={formattedDescription}
               />
               <Title $isDarkTheme={isDarkTheme}>
