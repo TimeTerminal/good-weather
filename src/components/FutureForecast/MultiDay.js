@@ -4,9 +4,9 @@ import styled from "styled-components";
 import SingleDay from "./SingleDay";
 import { RESPONSIVE_SIZES } from "../../constants";
 
-const MultiDayContainer = styled.div`
+const Section = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   width: max-content;
   margin-top: 20px;
   padding: 20px;
@@ -16,14 +16,29 @@ const MultiDayContainer = styled.div`
     rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
     rgba(0, 0, 0, 0.25) 0px 0px 0px 1px inset;
 
-  @media (max-width: ${RESPONSIVE_SIZES.TABLET}px) {
-    padding: 10px;
-  }
-
   @media (max-width: 560px) {
     justify-content: left;
     width: 100%;
     overflow-x: scroll;
+  }
+`;
+
+const SectionTitle = styled.h4`
+  margin: 0;
+  color: var(
+    --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
+  );
+  font-size: 1.2em;
+  font-weight: normal;
+`;
+
+const MultiDayContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+
+  @media (max-width: ${RESPONSIVE_SIZES.TABLET}px) {
+    justify-content: left;
   }
 `;
 
@@ -73,9 +88,14 @@ const renderAllColumns = ({ fiveDayData, viewportWidth, ...props }) => {
 
 const MultiDay = (props) => {
   return (
-    <MultiDayContainer>
-      {!props.loading && renderAllColumns(props)}
-    </MultiDayContainer>
+    <Section>
+      <SectionTitle $isDarkTheme={props.isDarkTheme}>
+        Daily forecast
+      </SectionTitle>
+      <MultiDayContainer>
+        {!props.loading && renderAllColumns(props)}
+      </MultiDayContainer>
+    </Section>
   );
 };
 

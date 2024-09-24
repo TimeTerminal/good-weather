@@ -1,14 +1,14 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-import cloud from "/assets/images/cloud.svg";
-import cloudDrizzle from "/assets/images/cloud-drizzle.svg";
-import cloudLightning from "/assets/images/cloud-lightning.svg";
-import cloudRain from "/assets/images/cloud-rain.svg";
-import cloudSnow from "/assets/images/cloud-snow.svg";
-import mist from "/assets/images/mist.svg";
-import sun from "/assets/images/sun.svg";
-import wind from "/assets/images/wind.svg";
+import cloud from "../images/icons/cloud.svg";
+import cloudDrizzle from "../images/icons/cloud-drizzle.svg";
+import cloudLightning from "../images/icons/cloud-lightning.svg";
+import cloudRain from "../images/icons/cloud-rain.svg";
+import cloudSnow from "../images/icons/cloud-snow.svg";
+import mist from "../images/icons/mist.svg";
+import sun from "../images/icons/sun.svg";
+import wind from "../images/icons/wind.svg";
 
 const Icon = styled.img`
   width: ${({ $headerImage }) => ($headerImage ? "70px" : "55px")};

@@ -5,9 +5,9 @@ import { round } from "lodash";
 import { RESPONSIVE_SIZES } from "../constants";
 import { capitalizePhrase, getWindCategory } from "../helpers";
 import WeatherIcon from "./WeatherIcon";
-import search from "/assets/images/search.svg";
-import moon from "/assets/images/moon.svg";
-import sun from "/assets/images/sun.svg";
+import search from "../images/icons/search.svg";
+import moon from "../images/icons/moon.svg";
+import sun from "../images/icons/sun.svg";
 
 const HeaderContainer = styled.div`
   display: flex;
