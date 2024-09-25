@@ -4,7 +4,7 @@ import styled from "styled-components";
 import SingleDay from "./SingleDay";
 import { RESPONSIVE_SIZES } from "../../constants";
 
-const Section = styled.div`
+const Section = styled.section`
   display: flex;
   flex-direction: column;
   width: max-content;
@@ -20,6 +20,14 @@ const Section = styled.div`
     justify-content: left;
     width: 100%;
     overflow-x: scroll;
+  }
+
+  @media (max-width: ${RESPONSIVE_SIZES.TABLET}px) {
+    margin-top: 15px;
+  }
+
+  @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
+    margin-top: 10px;
   }
 `;
 
@@ -84,7 +92,7 @@ const renderAllColumns = ({
         precipitationProbability={pop}
         tempDayLow={temp_min}
         tempDayHigh={temp_max}
-        {...props as MultiDay}
+        {...(props as MultiDay)}
       />
     );
   });

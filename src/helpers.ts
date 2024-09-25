@@ -59,6 +59,8 @@ export const getDayName = (dayNum: number): string => {
   }
 };
 
+export const getTemperatureUnits = (isMetric: boolean) => `°${isMetric ? "C" : "F"}`;
+
 /**
  * Return the corresponding wind category for a given wind speed
  * @param windSpeed The speed to compare against

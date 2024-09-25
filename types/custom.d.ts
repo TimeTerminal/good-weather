@@ -10,16 +10,21 @@ declare module "*.svg" {
 // === Components ===
 // ==================
 type Header = {
-  isDarkTheme: boolean;
   fetchWeatherData: FetchWeatherData;
+  isDarkTheme: boolean;
   isError: boolean;
   isMetric: boolean;
   locationName: string;
-  loading: boolean;
-  selectedDayData: SingleDayData;
   setIsDarkTheme: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMetric: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+};
+
+type Snapshot = {
+  isDarkTheme: boolean;
+  isMetric: boolean;
+  loading: boolean;
+  selectedDayData: SingleDayData;
 };
 
 type MultiDay = {

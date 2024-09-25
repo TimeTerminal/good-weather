@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { lazy, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import Header from "./components/Header";
+const Snapshot = lazy(() => import('./components/Snapshot'));
 import MultiDay from "./components/FutureForecast/MultiDay";
 import { API_URL, DAYS_TO_SHOW, RESPONSIVE_SIZES } from "./constants";
 
@@ -38,6 +39,11 @@ const Layout = styled.div`
   @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
     padding: 20px 10px;
   }
+`;
+
+const Divider = styled.hr`
+  width: 100%;
+  border: 0.5px solid #f5f5f5;
 `;
 
 const App = () => {
@@ -123,8 +129,6 @@ const App = () => {
       }
     }
 
-    console.log("filteredData :>> ", filteredData);
-
     return filteredData;
   };
 
@@ -194,15 +198,23 @@ const App = () => {
           <Header
             fetchWeatherData={fetchWeatherData}
             isDarkTheme={isDarkTheme}
-            isMetric={isMetric}
             isError={state.error}
+            isMetric={isMetric}
             locationName={location}
-            loading={state.loading}
-            selectedDayData={state.selectedDay.data as SingleDayData}
             setIsDarkTheme={setIsDarkTheme}
             setIsMetric={setIsMetric}
             setSearchValue={setSearchValue}
           />
+
+          <Divider />
+
+          <Snapshot
+            isDarkTheme={isDarkTheme}
+            isMetric={isMetric}
+            loading={state.loading}
+            selectedDayData={state.selectedDay.data as SingleDayData}
+          />
+
           <MultiDay
             isDarkTheme={isDarkTheme}
             fiveDayData={state.fiveDayData}
