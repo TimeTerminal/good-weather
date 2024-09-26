@@ -8,11 +8,13 @@ import { RESPONSIVE_SIZES } from "../constants";
 import {
   capitalizePhrase,
   getTemperatureUnits,
-  getWindCategory,
+  getWindSpeed,
 } from "../helpers";
 
 const SnapshotSection = styled.section`
   margin-top: 20px;
+  width: 100%;
+  max-width: 750px;
 
   @media (max-width: ${RESPONSIVE_SIZES.TABLET}px) {
     margin-top: 15px;
@@ -33,11 +35,14 @@ const Row1 = styled.span`
 
 const Row2 = styled.span`
   display: flex;
+  justify-content: space-evenly;
+  margin-top: 10px;
+`;
+
+const SnapshotColumn = styled.div`
+  display: flex;
   flex-direction: column;
   align-items: center;
-  grid-column: 1 / 4;
-  grid-row: 3;
-  margin-top: 10px;
 `;
 
 const Title = styled.h1<ThemableElement>`
@@ -53,7 +58,7 @@ const Title = styled.h1<ThemableElement>`
   }
 `;
 
-const Subtitle = styled.h2<ThemableElement>`
+const MetricText = styled.p<ThemableElement>`
   margin: 0;
   color: var(
     --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
@@ -62,7 +67,8 @@ const Subtitle = styled.h2<ThemableElement>`
   font-weight: normal;
 `;
 
-const HeaderText = styled.span<ThemableElement>`
+const MetricLabel = styled.p<ThemableElement>`
+  margin: 0;
   color: var(
     --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
   );
@@ -99,19 +105,6 @@ const Snapshot: React.FC<Snapshot> = ({
     main = selectedDayData.weather[0].main;
   }
 
-  const renderFeelsLike = () => {
-    if (feelsLike && feelsLike !== temperature) {
-      return (
-        <>
-          Feels like {round(selectedDayData.main.feels_like)}
-          <TemperatureUnits>{getTemperatureUnits(isMetric)}</TemperatureUnits>
-        </>
-      );
-    }
-
-    return <></>;
-  };
-
   return (
     <Suspense>
       {!loading && (
@@ -129,23 +122,45 @@ const Snapshot: React.FC<Snapshot> = ({
               </TemperatureUnits>
             </Title>
           </Row1>
+
           <Row2>
-            <Subtitle $isDarkTheme={isDarkTheme}>
-              {renderFeelsLike()}
-              {selectedDayData?.weather && `, ${formattedDescription}`}
-            </Subtitle>
-            <HeaderText $isDarkTheme={isDarkTheme}>
-              {`${
-                selectedDayData?.pop && round(selectedDayData.pop * 100)
-              }% chance of rain`}
-            </HeaderText>
-            <HeaderText $isDarkTheme={isDarkTheme}>
-              {selectedDayData.wind &&
-                getWindCategory(selectedDayData.wind.speed, isMetric)}
-            </HeaderText>
-            <HeaderText $isDarkTheme={isDarkTheme}>
-              {`${selectedDayData?.main?.humidity}% Humidity`}
-            </HeaderText>
+            <SnapshotColumn>
+              <MetricText $isDarkTheme={isDarkTheme}>
+                {feelsLike && (
+                  <>
+                    {round(feelsLike)}
+                    <TemperatureUnits>
+                      {getTemperatureUnits(isMetric)}
+                    </TemperatureUnits>
+                  </>
+                )}
+              </MetricText>
+              <MetricLabel $isDarkTheme={isDarkTheme}>Feels like</MetricLabel>
+            </SnapshotColumn>
+
+            <SnapshotColumn>
+              <MetricText $isDarkTheme={isDarkTheme}>
+                {`${selectedDayData?.pop && round(selectedDayData.pop * 100)}%`}
+              </MetricText>
+              <MetricLabel $isDarkTheme={isDarkTheme}>
+                Chance of rain
+              </MetricLabel>
+            </SnapshotColumn>
+
+            <SnapshotColumn>
+              <MetricText $isDarkTheme={isDarkTheme}>
+                {selectedDayData.wind &&
+                  getWindSpeed(selectedDayData.wind.speed, isMetric)}
+              </MetricText>
+              <MetricLabel $isDarkTheme={isDarkTheme}>Wind</MetricLabel>
+            </SnapshotColumn>
+
+            <SnapshotColumn>
+              <MetricText $isDarkTheme={isDarkTheme}>
+                {`${selectedDayData?.main?.humidity}%`}
+              </MetricText>
+              <MetricLabel $isDarkTheme={isDarkTheme}>Humidity</MetricLabel>
+            </SnapshotColumn>
           </Row2>
         </SnapshotSection>
       )}
