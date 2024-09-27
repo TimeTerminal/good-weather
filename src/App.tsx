@@ -2,7 +2,7 @@ import React, { lazy, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import Header from "./components/Header";
-const Snapshot = lazy(() => import('./components/Snapshot'));
+const Snapshot = lazy(() => import("./components/Snapshot"));
 import MultiDay from "./components/FutureForecast/MultiDay";
 import { API_URL, DAYS_TO_SHOW, RESPONSIVE_SIZES } from "./constants";
 
@@ -15,6 +15,8 @@ const AppContainer = styled.div`
 `;
 
 const Backdrop = styled.div<ThemableElement>`
+  display: flex;
+  justify-content: center;
   width: 100%;
   height: 100%;
   background-color: #4c4f72;
@@ -30,20 +32,16 @@ const Layout = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 20px 40px;
+  max-width: 860px;
+  padding: 20px 0;
 
-  @media (max-width: ${RESPONSIVE_SIZES.TABLET}px) {
+  @media (max-width: ${RESPONSIVE_SIZES.DESKTOP}px) {
     padding: 20px 20px;
   }
 
   @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
     padding: 20px 10px;
   }
-`;
-
-const Divider = styled.hr`
-  width: 100%;
-  border: 0.5px solid #f5f5f5;
 `;
 
 const App = () => {
@@ -205,8 +203,6 @@ const App = () => {
             setIsMetric={setIsMetric}
             setSearchValue={setSearchValue}
           />
-
-          <Divider />
 
           <Snapshot
             isDarkTheme={isDarkTheme}

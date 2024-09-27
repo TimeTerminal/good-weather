@@ -12,22 +12,14 @@ const Section = styled.section`
   padding: 20px;
   background: rgba(2, 20, 46, 0.5);
   border-radius: 8px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
-    rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
-    rgba(0, 0, 0, 0.25) 0px 0px 0px 1px inset;
+  box-shadow: rgba(1, 22, 66, 0) 10px 0.07em 0.07em,
+    rgba(1, 22, 66, 0.25) 0px 0.125em 0.5em,
+    rgba(1, 22, 66, 0) 0px 0px 0px 1px inset;
 
   @media (max-width: 560px) {
     justify-content: left;
     width: 100%;
     overflow-x: scroll;
-  }
-
-  @media (max-width: ${RESPONSIVE_SIZES.TABLET}px) {
-    margin-top: 15px;
-  }
-
-  @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
-    margin-top: 10px;
   }
 `;
 

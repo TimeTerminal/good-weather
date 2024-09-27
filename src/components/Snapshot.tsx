@@ -29,33 +29,45 @@ const Row1 = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-column: 1 / 4;
-  grid-row: 2;
-`;
-
-const Row2 = styled.span`
-  display: flex;
-  justify-content: space-evenly;
-  margin-top: 10px;
-`;
-
-const SnapshotColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  min-height: 160px;
 `;
 
 const Title = styled.h1<ThemableElement>`
   margin: 0;
   color: ${({ $isDarkTheme }) =>
     $isDarkTheme ? "var(--title)" : "var(--lightModeTitle)"};
-  font-size: 5em;
+  font-size: 8em;
   font-weight: bold;
   line-height: 1;
 
   @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
     font-size: 6em;
   }
+`;
+
+const Divider = styled.hr`
+  width: 100%;
+  height: 1px;
+  max-width: 350px;
+  background: linear-gradient(
+    to right,
+    rgba(243, 243, 243, 0.55),
+    rgba(243, 243, 243, 0.6),
+    rgba(243, 243, 243, 0.55)
+  );
+  border: none;
+`;
+
+const Row2 = styled.span`
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+`;
+
+const SnapshotColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const MetricText = styled.p<ThemableElement>`
@@ -122,6 +134,8 @@ const Snapshot: React.FC<Snapshot> = ({
               </TemperatureUnits>
             </Title>
           </Row1>
+
+          <Divider />
 
           <Row2>
             <SnapshotColumn>
