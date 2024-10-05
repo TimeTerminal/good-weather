@@ -1,8 +1,9 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
+import Icon from "./Icon";
+
 import { capitalizePhrase, getTemperatureUnits } from "../helpers";
-import search from "../images/icons/search.svg";
 import moon from "../images/icons/moon.svg";
 import sun from "../images/icons/sun.svg";
 
@@ -72,6 +73,7 @@ const SearchInput = styled.input<ThemableElement>`
 `;
 
 const SearchButton = styled(StyledButton)`
+  padding: 7px;
   border-radius: 0 8px 8px 0;
 `;
 
@@ -124,6 +126,7 @@ const TemperatureUnitToggle = styled(StyledButton)`
 const DarkModeToggleButton = styled(StyledButton)`
   width: 40px;
   border-radius: 8px;
+  padding: 7px;
 
   ${({ $isDarkTheme }) => $isDarkTheme && `border: 1px solid #9e9e9e;`}
 `;
@@ -148,7 +151,7 @@ const Header: React.FC<Header> = ({
             onChange={(e) => setSearchValue(e.target.value)}
           />
           <SearchButton $isDarkTheme={isDarkTheme}>
-            <img src={search as string} alt="Search icon" />
+            <Icon iconName="search" />
           </SearchButton>
         </Form>
       </SearchContainer>
@@ -173,10 +176,7 @@ const Header: React.FC<Header> = ({
             }}
             $isDarkTheme={isDarkTheme}
           >
-            <img
-              src={(isDarkTheme ? sun : moon) as string}
-              alt="Toggle dark mode - moon icon"
-            />
+            <Icon iconName={isDarkTheme ? "sun" : "moon"} />
           </DarkModeToggleButton>
         </Toggles>
       </Row2>

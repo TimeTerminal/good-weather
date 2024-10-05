@@ -1,35 +1,23 @@
-import React from "react";
-import styled, { css } from "styled-components";
+import React, { lazy } from "react";
+import styled from "styled-components";
 
-import cloud from "../images/icons/cloud.svg";
-import cloudDrizzle from "../images/icons/cloud-drizzle.svg";
-import cloudLightning from "../images/icons/cloud-lightning.svg";
-import cloudRain from "../images/icons/cloud-rain.svg";
-import cloudSnow from "../images/icons/cloud-snow.svg";
-import mist from "../images/icons/mist.svg";
-import sun from "../images/icons/sun.svg";
-import wind from "../images/icons/wind.svg";
+const Fallback = styled.div<StyledWeatherIconFallback>`
+  width: ${({ $isHeaderImage }) => ($isHeaderImage ? "70px" : "55px")};
+  height: ${({ $isHeaderImage }) => ($isHeaderImage ? "70px" : "24px")};
+`;
 
-const Icon = styled.img<StyledWeatherIcon>`
+const StyledIcon = styled.div<StyledWeatherIcon>`
   width: ${({ $isHeaderImage }) => ($isHeaderImage ? "70px" : "55px")};
   margin: ${({ $isHeaderImage }) => $isHeaderImage && "0 15px 0 0"};
   background: none;
   transition: 0.5s ease;
 
-  &path {
-    stroke: ${({ $iconColor }) => "#fcd573"};
-    /* fill: ${({ $iconColor }) => $iconColor || "#fcd573"}; */
-  }
-
   filter: ${({ $iconColor }) =>
-    $iconColor ? `drop-shadow(0 0 10px rgb(${$iconColor}, 0.8))` : "none"};
+    $iconColor ? `drop-shadow(0 0 10px ${$iconColor})` : "none"};
 `;
 
-const handleIconColour = (main: string) => {
+const getIconColour = (main: string) => {
   switch (main) {
-    case "Clear":
-    case "Thunderstorm":
-      return "252, 213, 115";
     case "Clouds":
     case "Mist":
     case "Smoke":
@@ -42,29 +30,27 @@ const handleIconColour = (main: string) => {
     case "Squall":
     case "Tornado":
     case "Snow":
-      return "222, 223, 222";
+      return "#dedfde";
     case "Drizzle":
     case "Rain":
-      return "54, 133, 242";
+      return "#3685f2";
     default:
-      return "252, 213, 115";
+      return "#fcd573";
   }
 };
 
 const getIconName = (description: string) => {
   switch (description) {
-    case "Clear":
-      return "sun";
     case "Clouds":
       return "cloud";
     case "Drizzle":
-      return "cloudDrizzle";
+      return "cloud-drizzle";
     case "Rain":
-      return "cloudRain";
+      return "cloud-rain";
     case "Snow":
-      return "cloudSnow";
+      return "cloud-snow";
     case "Thunderstorm":
-      return "cloudLightning";
+      return "cloud-lightning";
     case "Mist":
     case "Smoke":
     case "Haze":
@@ -83,30 +69,29 @@ const getIconName = (description: string) => {
 
 const WeatherIcon: React.FC<WeatherIcon> = ({
   description,
-  isHeaderImage,
   iconName,
+  isHeaderImage,
   ...props
 }) => {
-  const iconDict = {
-    sun,
-    cloud,
-    cloudDrizzle,
-    cloudRain,
-    cloudSnow,
-    cloudLightning,
-    mist,
-    wind,
-  };
-  const weatherIconPath = iconDict[getIconName(iconName)];
+  const iconColour = getIconColour(iconName);
+  const IconComponent = lazy(() =>
+    import(`../images/icons/${getIconName(iconName)}.svg.js`).catch(
+      () => import("../images/icons/cloud-rain.svg.js")
+    )
+  );
 
   return (
-    <Icon
-      src={weatherIconPath as string}
-      alt={`Weather icon - ${description}`}
-      $iconColor={handleIconColour(iconName)}
+    <StyledIcon
+      $iconColor={iconColour}
       $isHeaderImage={isHeaderImage ?? false}
       {...props}
-    />
+    >
+      <React.Suspense
+        fallback={<Fallback $isHeaderImage={isHeaderImage ?? false} />}
+      >
+        <IconComponent stroke={iconColour} />
+      </React.Suspense>
+    </StyledIcon>
   );
 };
 

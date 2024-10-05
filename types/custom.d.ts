@@ -20,6 +20,11 @@ type Header = {
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
+type Icon = {
+  iconColor?: string;
+  iconName: string;
+};
+
 type Snapshot = {
   isDarkTheme: boolean;
   isMetric: boolean;
@@ -113,6 +118,14 @@ interface ThemableElement {
 
 interface ErrorText {
   readonly $isError: boolean;
+}
+
+interface StyledIcon {
+  readonly $iconColor: string;
+}
+
+interface StyledWeatherIconFallback {
+  readonly $isHeaderImage: boolean;
 }
 
 interface StyledWeatherIcon {

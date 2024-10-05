@@ -80,7 +80,7 @@ const Date = styled.p`
 `;
 
 const Divider = styled.hr`
-  width: 50%;
+  width: 30%;
   height: 1px;
   max-width: 350px;
   background: linear-gradient(
@@ -90,6 +90,10 @@ const Divider = styled.hr`
     rgba(243, 243, 243, 0.55)
   );
   border: none;
+
+  @media (max-width: ${RESPONSIVE_SIZES.DESKTOP}px) {
+    width: 80%;
+  }
 `;
 
 const Icon = styled(WeatherIcon)<WeatherIcon>`
