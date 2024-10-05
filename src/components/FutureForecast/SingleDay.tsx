@@ -12,6 +12,7 @@ const DayContainer = styled.button<DayContainer>`
   align-items: center;
   max-width: 1000px;
   min-width: 150px;
+  min-height: 230px;
   margin: 10px 0 0;
   padding: 20px 0 15px;
   background: none;
@@ -45,6 +46,7 @@ const DayContainer = styled.button<DayContainer>`
     margin: 0;
     padding: 10px;
     min-width: 100px;
+    min-height: auto;
     border-radius: 0;
     border-width: 0;
 
@@ -52,33 +54,67 @@ const DayContainer = styled.button<DayContainer>`
       border-width: 0 0 0 1px;
     }
   }
+
+  @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
+    min-width: 95px;
+    padding: 10px 5px;
+  }
 `;
 
-const Title = styled.h3`
-  margin: 0 0 5px;
-  font-size: 28px;
+const Day = styled.p`
+  margin: 0;
+  font-size: 2.1em;
   font-weight: normal;
+  color: #f5f5f5;
+
+  @media (max-width: ${RESPONSIVE_SIZES.TABLET}px) {
+    font-size: 1.2em;
+  }
+`;
+
+const Date = styled.p`
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: lighter;
   color: #f5f5f5;
 `;
 
-const Subtitle = styled.h4<ThemableElement>`
-  margin: 0 0 10px;
-  color: ${({ $isDarkTheme }) => ($isDarkTheme ? "#9e9e9e" : "#f5f5f5")};
-  font-size: 1.5em;
-  font-weight: lighter;
+const Divider = styled.hr`
+  width: 50%;
+  height: 1px;
+  max-width: 350px;
+  background: linear-gradient(
+    to right,
+    rgba(243, 243, 243, 0.55),
+    rgba(243, 243, 243, 0.6),
+    rgba(243, 243, 243, 0.55)
+  );
+  border: none;
 `;
 
 const Icon = styled(WeatherIcon)<WeatherIcon>`
-  width: 4em;
+  width: 3em;
+  margin: 0 0 10px;
 
   @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
     width: 2em;
   }
 `;
 
-const Text = styled.p`
-  margin: 0 0 5px;
+const DayDetail = styled.span`
+  display: inline-flex;
   font-size: 1.2em;
+  margin: 0 0 5px;
+`;
+
+const Text = styled.p`
+  margin: 0;
+  color: #efefef;
+`;
+
+const LightText = styled.p`
+  margin: 0;
+  font-weight: 200;
   color: #efefef;
 `;
 
@@ -96,6 +132,7 @@ const SingleDay: React.FC<SingleDay> = ({
   tempDayHigh,
 }) => {
   const formattedDescription = capitalizePhrase(description);
+  const precipitation = round(precipitationProbability * 100);
 
   return (
     <DayContainer
@@ -103,12 +140,26 @@ const SingleDay: React.FC<SingleDay> = ({
       selected={selectedDayId === id}
       onClick={() => setSelectedDay(selectedDayId, id)}
     >
-      <Title>{getDayName(day)}</Title>
-      <Subtitle $isDarkTheme={isDarkTheme}>{date}</Subtitle>
+      <Day>{id === 0 ? "Today" : getDayName(day)}</Day>
+      <Date>{date}</Date>
+      <Divider />
       <Icon iconName={main} description={formattedDescription} />
-      <Text>Low: {round(tempDayLow)}&#176;</Text>
-      <Text>High: {round(tempDayHigh)}&#176;</Text>
-      <Text>POP: {round(precipitationProbability * 100)}%</Text>
+      <DayDetail>
+        <LightText>H:&nbsp;</LightText>
+        <Text>{round(tempDayHigh)}&deg;</Text>
+      </DayDetail>
+      <DayDetail>
+        <LightText>L:&nbsp;</LightText>
+        <Text>{round(tempDayLow)}&deg;</Text>
+      </DayDetail>
+      {precipitation ? (
+        <DayDetail>
+          <LightText>POP:&nbsp;</LightText>
+          <Text>{precipitation}%</Text>
+        </DayDetail>
+      ) : (
+        ""
+      )}
     </DayContainer>
   );
 };

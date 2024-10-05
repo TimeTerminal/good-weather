@@ -2,8 +2,6 @@ const path = require("path");
 const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const isProduction = process.env.NODE_ENV == "production";
-
 const config = {
   entry: {
     main: "./src/index.tsx",
@@ -46,10 +44,8 @@ const config = {
 };
 
 module.exports = () => {
-  if (isProduction) {
-    config.mode = "production";
-  } else {
-    config.mode = "development";
-  }
+  config.mode =
+    process.env.NODE_ENV == "production" ? "production" : "development";
+
   return config;
 };

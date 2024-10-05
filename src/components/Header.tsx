@@ -53,14 +53,21 @@ const SearchInput = styled.input<ThemableElement>`
   color: var(
     --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
   );
-  font-size: 14px;
+  font-size: 0.9em;
   border: 1px solid white;
   border-right: 0;
   border-radius: 8px 0 0 8px;
-  transition: 0.15s ease-out;
+  outline: none;
+  transition: all 0.15s ease;
 
   &::placeholder {
-    font-weight: 200;
+    font-weight: 300;
+  }
+
+  &:focus-visible {
+    border-color: var(
+      --${({ $isDarkTheme }) => ($isDarkTheme ? "title" : "lightModeTitle")}
+    );
   }
 `;
 

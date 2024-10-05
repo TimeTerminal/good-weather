@@ -36,11 +36,11 @@ const Layout = styled.div`
   padding: 20px 0;
 
   @media (max-width: ${RESPONSIVE_SIZES.DESKTOP}px) {
-    padding: 20px 20px;
+    padding: 20px;
   }
 
   @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
-    padding: 20px 10px;
+    padding: 15px;
   }
 `;
 

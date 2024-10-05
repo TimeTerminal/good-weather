@@ -12,19 +12,17 @@ import wind from "../images/icons/wind.svg";
 
 const Icon = styled.img<StyledWeatherIcon>`
   width: ${({ $isHeaderImage }) => ($isHeaderImage ? "70px" : "55px")};
-  margin: ${({ $isHeaderImage }) =>
-    $isHeaderImage ? "0 15px 0 0" : "5px 0 20px"};
+  margin: ${({ $isHeaderImage }) => $isHeaderImage && "0 15px 0 0"};
   background: none;
   transition: 0.5s ease;
 
-  ${({ $isHeaderImage, $iconName }) =>
-    $iconName &&
-    css`
-      filter: drop-shadow(
-        0 ${$isHeaderImage ? "0" : "10px"} 10px
-          rgb(${handleIconColour($iconName)}, 0.8)
-      );
-    `}
+  &path {
+    stroke: ${({ $iconColor }) => "#fcd573"};
+    /* fill: ${({ $iconColor }) => $iconColor || "#fcd573"}; */
+  }
+
+  filter: ${({ $iconColor }) =>
+    $iconColor ? `drop-shadow(0 0 10px rgb(${$iconColor}, 0.8))` : "none"};
 `;
 
 const handleIconColour = (main: string) => {
@@ -105,7 +103,7 @@ const WeatherIcon: React.FC<WeatherIcon> = ({
     <Icon
       src={weatherIconPath as string}
       alt={`Weather icon - ${description}`}
-      $iconName={iconName}
+      $iconColor={handleIconColour(iconName)}
       $isHeaderImage={isHeaderImage ?? false}
       {...props}
     />

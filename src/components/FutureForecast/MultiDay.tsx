@@ -7,7 +7,6 @@ import { RESPONSIVE_SIZES } from "../../constants";
 const Section = styled.section`
   display: flex;
   flex-direction: column;
-  width: max-content;
   margin-top: 20px;
   padding: 20px;
   background: rgba(2, 20, 46, 0.5);
@@ -17,9 +16,7 @@ const Section = styled.section`
     rgba(1, 22, 66, 0) 0px 0px 0px 1px inset;
 
   @media (max-width: 560px) {
-    justify-content: left;
     width: 100%;
-    overflow-x: scroll;
   }
 `;
 
@@ -30,6 +27,16 @@ const SectionTitle = styled.h4<ThemableElement>`
   );
   font-size: 1.2em;
   font-weight: normal;
+`;
+
+const ScrollableDiv = styled.div`
+  width: max-content;
+
+  @media (max-width: 560px) {
+    justify-content: left;
+    width: 100%;
+    overflow-x: scroll;
+  }
 `;
 
 const MultiDayContainer = styled.div`
@@ -98,9 +105,11 @@ const MultiDay: React.FC<MultiDay> = (props) => {
       <SectionTitle $isDarkTheme={props.isDarkTheme}>
         Daily forecast
       </SectionTitle>
-      <MultiDayContainer>
-        {!props.loading && renderAllColumns(props)}
-      </MultiDayContainer>
+      <ScrollableDiv>
+        <MultiDayContainer>
+          {!props.loading && renderAllColumns(props)}
+        </MultiDayContainer>
+      </ScrollableDiv>
     </Section>
   );
 };

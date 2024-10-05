@@ -73,7 +73,7 @@ const SnapshotColumn = styled.div`
 const MetricText = styled.p<ThemableElement>`
   margin: 0;
   color: var(
-    --${({ $isDarkTheme }) => ($isDarkTheme ? "text" : "lightModeText")}
+    --${({ $isDarkTheme }) => ($isDarkTheme ? "title" : "lightModeTitle")}
   );
   font-size: 1.2em;
   font-weight: normal;
@@ -87,7 +87,6 @@ const MetricLabel = styled.p<ThemableElement>`
   font-size: 1.1em;
   font-weight: 200;
   line-height: 1.3em;
-  text-decoration: none;
 
   @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
     font-size: 1em;

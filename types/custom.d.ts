@@ -117,7 +117,7 @@ interface ErrorText {
 
 interface StyledWeatherIcon {
   readonly $isHeaderImage: boolean;
-  readonly $iconName: string;
+  readonly $iconColor: string;
 }
 
 interface DayContainer {
