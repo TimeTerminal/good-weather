@@ -1,10 +1,5 @@
-import React, { lazy } from "react";
+import React, { lazy, useMemo } from "react";
 import styled from "styled-components";
-
-const Fallback = styled.div<StyledWeatherIconFallback>`
-  width: ${({ $isHeaderImage }) => ($isHeaderImage ? "70px" : "55px")};
-  height: ${({ $isHeaderImage }) => ($isHeaderImage ? "70px" : "24px")};
-`;
 
 const StyledIcon = styled.div<StyledWeatherIcon>`
   width: ${({ $isHeaderImage }) => ($isHeaderImage ? "70px" : "55px")};
@@ -74,11 +69,13 @@ const WeatherIcon: React.FC<WeatherIcon> = ({
   ...props
 }) => {
   const iconColour = getIconColour(iconName);
-  const IconComponent = lazy(() =>
-    import(`../images/icons/${getIconName(iconName)}.svg.js`).catch(
-      () => import("../images/icons/cloud-rain.svg.js")
-    )
-  );
+  const IconComponent = useMemo(() => {
+    return lazy(() =>
+      import(`../images/icons/${getIconName(weatherCode)}.svg.js`).catch(
+        () => import("../images/icons/cloud-rain.svg.js")
+      )
+    );
+  }, [weatherCode]);
 
   return (
     <StyledIcon
@@ -86,9 +83,7 @@ const WeatherIcon: React.FC<WeatherIcon> = ({
       $isHeaderImage={isHeaderImage ?? false}
       {...props}
     >
-      <React.Suspense
-        fallback={<Fallback $isHeaderImage={isHeaderImage ?? false} />}
-      >
+      <React.Suspense>
         <IconComponent stroke={iconColour} />
       </React.Suspense>
     </StyledIcon>
