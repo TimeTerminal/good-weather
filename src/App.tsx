@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Header from "./components/Header";
 const Snapshot = lazy(() => import("./components/Snapshot"));
 import MultiDay from "./components/FutureForecast/MultiDay";
-import { API_URL, DAYS_TO_SHOW, RESPONSIVE_SIZES } from "./constants";
+import { API_URL, RESPONSIVE_SIZES } from "./constants";
 
 const AppContainer = styled.div`
   display: flex;
@@ -50,6 +50,23 @@ const App = () => {
   const [searchValue, setSearchValue] = useState("Toronto");
   const [location, setLocation] = useState("Toronto");
   const [viewportWidth, setViewportWidth] = useState(window.outerWidth);
+  const [state, setState] = useState<AppState>({
+    error: false,
+    fiveDayData: [],
+    loading: false,
+    selectedDay: {
+      index: 0,
+      data: {},
+    },
+  });
+
+  const url = new URL(
+    `${API_URL}?location=42.3478,-71.0466&apikey=${
+      process.env.WEATHER_API_KEY
+    }&units=${isMetric ? "metric" : "imperial"}`
+  );
+
+  // location=${searchValue}
 
   useEffect(() => {
     const handleResize = () => {
@@ -68,22 +85,6 @@ const App = () => {
       );
     };
   }, []);
-
-  const [state, setState] = useState<AppState>({
-    error: false,
-    fiveDayData: [],
-    loading: false,
-    selectedDay: {
-      index: 0,
-      data: {},
-    },
-  });
-
-  const url = new URL(
-    `${API_URL}?q=${searchValue}&appid=${
-      process.env.OPEN_WEATHER_API_KEY
-    }&units=${isMetric ? "metric" : "imperial"}`
-  );
 
   /**
    * Retains a passed value to be used later for comparison purposes.
@@ -105,27 +106,23 @@ const App = () => {
 
   /**
    * API response parser called by `fetchWeatherData` upon successful weather data being received.
-   * @param returnedData Weather data returned by the Open Weather Map API
-   * @returns Filtered weather data belonging to the first timestamp from each day
+   * @param returnedData Weather data returned by the tomorrow.io API
+   * @returns Filtered daily weather data for 5 days
    */
-  const parseAPIResponse = (returnedData: {
-    list: SingleDayData[];
-  }): SingleDayData[] => {
-    const filteredData = [];
-    let currentDay = null;
-
-    // Only set data once per day. Using a for loop to use break functionality
-    for (let i = 0; i < returnedData.list.length; i++) {
-      const tempDay = returnedData.list[i]?.dt_txt.substring(0, 10);
-      if (currentDay !== tempDay) {
-        currentDay = tempDay;
-        filteredData.push(returnedData.list[i]);
-      }
-
-      if (filteredData.length === DAYS_TO_SHOW) {
-        break;
-      }
-    }
+  const parseAPIResponse = (returnedData: APIData): SingleDayData[] => {
+    const filteredData: SingleDayData[] = returnedData.timelines.daily.map(
+      ({ time, values }) => ({
+        humidity: values.humidityAvg,
+        pop: values.precipitationProbabilityAvg,
+        tempApparent: values.temperatureApparentAvg,
+        tempAvg: values.temperatureAvg,
+        tempHigh: values.temperatureMax,
+        tempLow: values.temperatureMin,
+        time,
+        weatherCode: values.weatherCodeMax,
+        wind: values.windSpeedAvg,
+      })
+    );
 
     return filteredData;
   };
@@ -143,31 +140,37 @@ const App = () => {
       });
     }
 
-    const openWeatherResponse = await fetch(url);
-    const jsonData = await openWeatherResponse.json();
+    try {
+      const aPIResponse = await fetch(url);
 
-    if (jsonData.cod !== "200") {
+      if (!aPIResponse.ok) {
+        throw new Error(`HTTP error. Status: ${aPIResponse.status}`);
+      }
+
+      const jsonData = await aPIResponse.json();
+      const fiveDayData = parseAPIResponse(jsonData);
+
+      setLocation(searchValue);
+
+      setState({
+        ...state,
+        error: false,
+        fiveDayData,
+        loading: false,
+        selectedDay: {
+          index: 0,
+          data: fiveDayData[0],
+        },
+      });
+    } catch (error) {
+      console.error(error);
+
       return setState({
         ...state,
         error: true,
         loading: false,
       });
     }
-
-    const fiveDayData = parseAPIResponse(jsonData);
-
-    setLocation(searchValue);
-
-    setState({
-      ...state,
-      error: false,
-      fiveDayData,
-      loading: false,
-      selectedDay: {
-        index: 0,
-        data: fiveDayData[0],
-      },
-    });
   };
 
   const setSelectedDay: SetSelectedDay = (
@@ -208,7 +211,7 @@ const App = () => {
             isDarkTheme={isDarkTheme}
             isMetric={isMetric}
             loading={state.loading}
-            selectedDayData={state.selectedDay.data as SingleDayData}
+            dayData={state.selectedDay.data as SingleDayData}
           />
 
           <MultiDay

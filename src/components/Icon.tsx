@@ -1,14 +1,8 @@
-import React, { lazy } from "react";
+import React, { lazy, useMemo } from "react";
 import styled from "styled-components";
 
-const Fallback = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
 const StyledIcon = styled.div<StyledIcon>`
-  width: 100%;
-  height: 100%;
+  width: "55px";
   margin: 0;
   background: none;
   transition: 0.5s ease;
@@ -18,15 +12,17 @@ const StyledIcon = styled.div<StyledIcon>`
 `;
 
 const Icon: React.FC<Icon> = ({ iconColor = "#fff", iconName }) => {
-  const IconComponent = lazy(() =>
-    import(`../images/icons/${iconName}.svg.js`).catch(
-      () => import("../images/icons/cloud-rain.svg.js")
-    )
-  );
+  const IconComponent = useMemo(() => {
+    return lazy(() =>
+      import(`../images/icons/${iconName}.svg.js`).catch(
+        () => import("../images/icons/cloud-rain.svg.js")
+      )
+    );
+  }, [iconName]);
 
   return (
     <StyledIcon $iconColor={iconColor}>
-      <React.Suspense fallback={<Fallback />}>
+      <React.Suspense>
         <IconComponent stroke={iconColor} />
       </React.Suspense>
     </StyledIcon>

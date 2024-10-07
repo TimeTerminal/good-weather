@@ -11,51 +11,76 @@ const StyledIcon = styled.div<StyledWeatherIcon>`
     $iconColor ? `drop-shadow(0 0 10px ${$iconColor})` : "none"};
 `;
 
-const getIconColour = (main: string) => {
-  switch (main) {
-    case "Clouds":
-    case "Mist":
-    case "Smoke":
-    case "Haze":
-    case "Dust":
-    case "Fog":
-    case "Sand":
-    case "Dust":
-    case "Ash":
-    case "Squall":
-    case "Tornado":
-    case "Snow":
+/**
+ * Get the icon background filter colour based on a passed weather code
+ * @param weatherCode - the weather code
+ */
+const getIconColour = (weatherCode: number): string => {
+  switch (weatherCode) {
+    // Clouds/mist/fog/dust
+    case 1001:
+    case 1101:
+    case 1102:
+    case 2000:
+    case 2100:
       return "#dedfde";
-    case "Drizzle":
-    case "Rain":
+    // Rain/freezing rain/storm
+    case 4000:
+    case 4001:
+    case 4200:
+    case 4201:
+    case 6000:
+    case 6001:
+    case 6200:
+    case 6201:
+    case 8000:
       return "#3685f2";
+    // Snow/ice
+    case 5000:
+    case 5001:
+    case 5100:
+    case 5101:
+    case 7000:
+    case 7101:
+    case 7102:
+      return "#e5f6fb";
     default:
       return "#fcd573";
   }
 };
 
-const getIconName = (description: string) => {
-  switch (description) {
-    case "Clouds":
+/**
+ * Get the icon filename based on a passed weather code
+ * @param weatherCode - the weather code
+ */
+const getIconName = (weatherCode: number): string => {
+  switch (weatherCode) {
+    case 1001:
+    case 1101:
+    case 1102:
       return "cloud";
-    case "Drizzle":
+    case 4000:
       return "cloud-drizzle";
-    case "Rain":
+    case 4001:
+    case 4200:
+    case 4201:
+    case 6000:
+    case 6001:
+    case 6200:
+    case 6201:
       return "cloud-rain";
-    case "Snow":
+    case 5000:
+    case 5001:
+    case 5100:
+    case 5101:
+    case 7000:
+    case 7101:
+    case 7102:
       return "cloud-snow";
-    case "Thunderstorm":
+    case 8000:
       return "cloud-lightning";
-    case "Mist":
-    case "Smoke":
-    case "Haze":
-    case "Dust":
-    case "Fog":
-    case "Sand":
-    case "Dust":
-    case "Ash":
-    case "Squall":
-    case "Tornado":
+    case 2000:
+    case 2100:
       return "mist";
     default:
       return "sun";
@@ -63,12 +88,11 @@ const getIconName = (description: string) => {
 };
 
 const WeatherIcon: React.FC<WeatherIcon> = ({
-  description,
-  iconName,
+  weatherCode,
   isHeaderImage,
   ...props
 }) => {
-  const iconColour = getIconColour(iconName);
+  const iconColour = getIconColour(weatherCode);
   const IconComponent = useMemo(() => {
     return lazy(() =>
       import(`../images/icons/${getIconName(weatherCode)}.svg.js`).catch(

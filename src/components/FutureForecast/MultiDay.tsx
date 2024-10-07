@@ -49,18 +49,6 @@ const MultiDayContainer = styled.div`
   }
 `;
 
-const createDate = (apiDate: string, viewportWidth: number) => {
-  const dateObj = new Date(apiDate);
-
-  const day = dateObj.getDay();
-  const date = dateObj.toLocaleString("en-US", {
-    month: viewportWidth > RESPONSIVE_SIZES.MOBILE ? "short" : "2-digit",
-    day: "numeric",
-  });
-
-  return { date, day };
-};
-
 const renderAllColumns = ({
   fiveDayData,
   viewportWidth,
@@ -69,32 +57,14 @@ const renderAllColumns = ({
   fiveDayData: SingleDayData[];
   viewportWidth: number;
 }) => {
-  const days = fiveDayData.map((dayData: SingleDayData, index: number) => {
-    const {
-      dt_txt,
-      main: { temp_min, temp_max },
-      pop,
-      weather: {
-        [0]: { main, description },
-      },
-    } = dayData;
-    const { date, day } = createDate(dt_txt, viewportWidth);
-
-    return (
-      <SingleDay
-        date={date}
-        day={day}
-        description={description}
-        id={index}
-        key={dt_txt}
-        main={main}
-        precipitationProbability={pop}
-        tempDayLow={temp_min}
-        tempDayHigh={temp_max}
-        {...(props as MultiDay)}
-      />
-    );
-  });
+  const days = fiveDayData.map((dayData: SingleDayData, index: number) => (
+    <SingleDay
+      dayData={dayData}
+      id={index}
+      key={dayData.time}
+      {...(props as MultiDay)}
+    />
+  ));
 
   return days;
 };
@@ -107,7 +77,10 @@ const MultiDay: React.FC<MultiDay> = (props) => {
       </SectionTitle>
       <ScrollableDiv>
         <MultiDayContainer>
-          {!props.loading && renderAllColumns(props)}
+          {!props.loading && 
+          
+          
+          renderAllColumns(props)}
         </MultiDayContainer>
       </ScrollableDiv>
     </Section>

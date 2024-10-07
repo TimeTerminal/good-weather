@@ -1,4 +1,4 @@
-import { KM_TO_MILES_MULTIPLIER } from "./constants";
+import { KM_TO_MILES_MULTIPLIER, RESPONSIVE_SIZES } from "./constants";
 
 /**
  * Capitalizes each word within a given phrase
@@ -24,8 +24,27 @@ export const capitalizePhrase = (phrase: string) => {
   return output;
 };
 
-// === Temperature ===
+// =====================
+// === Date and time ===
+// =====================
+export const createDate = (
+  apiDate: string,
+  viewportWidth: number
+): { date: string; day: number } => {
+  const dateObj = new Date(apiDate);
 
+  const day = dateObj.getDay();
+  const date = dateObj.toLocaleString("en-US", {
+    month: viewportWidth > RESPONSIVE_SIZES.MOBILE ? "short" : "2-digit",
+    day: "numeric",
+  });
+
+  return { date, day };
+};
+
+// ===================
+// === Temperature ===
+// ===================
 /**
  * Round a given floating-point temperature to the nearest integer
  * @param temperature
@@ -60,18 +79,16 @@ export const getDayName = (dayNum: number): string => {
   }
 };
 
+// ============
 // === Wind ===
-
+// ============
 /**
  * Return the corresponding wind category for a given wind speed
  * @param windSpeed The speed to compare against
  * @param isMetric Used to check whether the passed wind speed is in Metric or Imperial units
  * @returns Wind category, eg. "Light breeze", "Strong gale", etc
  */
-export const getWindSpeed = (
-  windSpeed: number,
-  isMetric: boolean
-): string => {
+export const getWindSpeed = (windSpeed: number, isMetric: boolean): string => {
   const windInMetersPerSecond = isMetric
     ? windSpeed
     : windSpeed * KM_TO_MILES_MULTIPLIER;

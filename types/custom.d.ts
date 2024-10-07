@@ -29,7 +29,7 @@ type Snapshot = {
   isDarkTheme: boolean;
   isMetric: boolean;
   loading: boolean;
-  selectedDayData: SingleDayData;
+  dayData: SingleDayData;
 };
 
 type MultiDay = {
@@ -42,24 +42,18 @@ type MultiDay = {
 };
 
 type SingleDay = {
-  day: number;
-  date: string;
-  description: string;
+  dayData: SingleDayData;
   id: number;
   isDarkTheme: boolean;
   key: string;
-  main: string;
-  precipitationProbability: number;
   selectedDayId: number;
   setSelectedDay: SetSelectedDay;
-  tempDayLow: number;
-  tempDayHigh: number;
+  viewportWidth: number;
 };
 
 type WeatherIcon = {
-  description: string;
   isHeaderImage?: boolean;
-  iconName: string;
+  weatherCode: number;
 };
 
 // ===================
@@ -81,25 +75,35 @@ type AppState = {
 type FetchWeatherData = (event?: React.FormEvent<HTMLFormElement>) => {};
 type SetSelectedDay = (currentIndex: number, newIndex: number) => void;
 
-interface SingleDayData {
-  dt: number;
-  dt_txt: string;
-  main: {
-    feels_like: number;
-    grnd_level: number;
-    humidity: number;
-    pressure: number;
-    sea_level: number;
-    temp: number;
-    temp_kf: number;
-    temp_max: number;
-    temp_min: number;
+interface APIData {
+  location: {};
+  timelines: {
+    daily: {
+      values: {
+        humidityAvg: number;
+        precipitationProbabilityAvg: number;
+        temperatureApparentAvg: number;
+        temperatureAvg: number;
+        temperatureMax: number;
+        temperatureMin: number;
+        windSpeedAvg: number;
+        weatherCodeMax: number;
+      };
+      time: string;
+    }[];
   };
-  weather: { id: number; main: string; description: string; icon: string }[];
-  clouds: {};
+}
+
+interface SingleDayData {
   pop: number;
-  visibility: number;
-  wind: { speed: number };
+  humidity: number;
+  tempApparent: number;
+  tempAvg: number;
+  tempHigh: number;
+  tempLow: number;
+  weatherCode: number;
+  wind: number;
+  time: string;
 }
 
 interface SelectedDayData {
@@ -122,10 +126,6 @@ interface ErrorText {
 
 interface StyledIcon {
   readonly $iconColor: string;
-}
-
-interface StyledWeatherIconFallback {
-  readonly $isHeaderImage: boolean;
 }
 
 interface StyledWeatherIcon {

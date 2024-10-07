@@ -101,33 +101,18 @@ const Snapshot: React.FC<Snapshot> = ({
   isDarkTheme,
   isMetric,
   loading,
-  selectedDayData,
+  dayData,
 }) => {
-  const temperature = selectedDayData.main?.temp ?? "";
-  const feelsLike = selectedDayData.main?.feels_like ?? "";
-  let formattedDescription = "";
-  let main = null;
-
-  if (selectedDayData.weather) {
-    formattedDescription = capitalizePhrase(
-      selectedDayData.weather[0].description
-    );
-
-    main = selectedDayData.weather[0].main;
-  }
+  const { humidity, pop, tempAvg, tempApparent, weatherCode, wind } = dayData;
 
   return (
     <Suspense>
       {!loading && (
         <SnapshotSection>
           <Row1>
-            <WeatherIcon
-              iconName={main as string}
-              isHeaderImage
-              description={formattedDescription}
-            />
+            <WeatherIcon isHeaderImage weatherCode={weatherCode} />
             <Title $isDarkTheme={isDarkTheme}>
-              {round(temperature)}
+              {round(tempAvg)}
               <TemperatureUnits>
                 {getTemperatureUnits(isMetric)}
               </TemperatureUnits>
@@ -139,9 +124,9 @@ const Snapshot: React.FC<Snapshot> = ({
           <Row2>
             <SnapshotColumn>
               <MetricText $isDarkTheme={isDarkTheme}>
-                {feelsLike && (
+                {tempApparent && (
                   <>
-                    {round(feelsLike)}
+                    {round(tempApparent)}
                     <TemperatureUnits>
                       {getTemperatureUnits(isMetric)}
                     </TemperatureUnits>
@@ -152,9 +137,7 @@ const Snapshot: React.FC<Snapshot> = ({
             </SnapshotColumn>
 
             <SnapshotColumn>
-              <MetricText $isDarkTheme={isDarkTheme}>
-                {`${selectedDayData?.pop && round(selectedDayData.pop * 100)}%`}
-              </MetricText>
+              <MetricText $isDarkTheme={isDarkTheme}>{`${pop}%`}</MetricText>
               <MetricLabel $isDarkTheme={isDarkTheme}>
                 Chance of rain
               </MetricLabel>
@@ -162,15 +145,14 @@ const Snapshot: React.FC<Snapshot> = ({
 
             <SnapshotColumn>
               <MetricText $isDarkTheme={isDarkTheme}>
-                {selectedDayData.wind &&
-                  getWindSpeed(selectedDayData.wind.speed, isMetric)}
+                {wind && getWindSpeed(wind, isMetric)}
               </MetricText>
               <MetricLabel $isDarkTheme={isDarkTheme}>Wind</MetricLabel>
             </SnapshotColumn>
 
             <SnapshotColumn>
               <MetricText $isDarkTheme={isDarkTheme}>
-                {`${selectedDayData?.main?.humidity}%`}
+                {`${humidity}%`}
               </MetricText>
               <MetricLabel $isDarkTheme={isDarkTheme}>Humidity</MetricLabel>
             </SnapshotColumn>

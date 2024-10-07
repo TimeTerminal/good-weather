@@ -4,8 +4,6 @@ import styled, { css } from "styled-components";
 import Icon from "./Icon";
 
 import { capitalizePhrase, getTemperatureUnits } from "../helpers";
-import moon from "../images/icons/moon.svg";
-import sun from "../images/icons/sun.svg";
 
 const HeaderContainer = styled.section`
   display: flex;
@@ -155,9 +153,7 @@ const Header: React.FC<Header> = ({
           </SearchButton>
         </Form>
       </SearchContainer>
-      <ErrorText $isError={isError}>
-        Please select a different location.
-      </ErrorText>
+      <ErrorText $isError={isError}>Please select a valid location</ErrorText>
 
       <Row2>
         <City $isDarkTheme={isDarkTheme}>{capitalizePhrase(locationName)}</City>

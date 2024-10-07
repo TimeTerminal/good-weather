@@ -4,7 +4,7 @@ import { round } from "lodash";
 
 import { RESPONSIVE_SIZES } from "../../constants";
 import WeatherIcon from "../WeatherIcon";
-import { capitalizePhrase, getDayName } from "../../helpers";
+import { createDate, getDayName } from "../../helpers";
 
 const DayContainer = styled.button<DayContainer>`
   display: flex;
@@ -123,20 +123,15 @@ const LightText = styled.p`
 `;
 
 const SingleDay: React.FC<SingleDay> = ({
-  day,
-  date,
-  description,
+  dayData,
   id,
   isDarkTheme,
-  main,
-  precipitationProbability,
   selectedDayId,
   setSelectedDay,
-  tempDayLow,
-  tempDayHigh,
+  viewportWidth,
 }) => {
-  const formattedDescription = capitalizePhrase(description);
-  const precipitation = round(precipitationProbability * 100);
+  const { pop, tempHigh, tempLow, time, weatherCode } = dayData;
+  const { date, day } = createDate(time, viewportWidth);
 
   return (
     <DayContainer
@@ -147,19 +142,19 @@ const SingleDay: React.FC<SingleDay> = ({
       <Day>{id === 0 ? "Today" : getDayName(day)}</Day>
       <Date>{date}</Date>
       <Divider />
-      <Icon iconName={main} description={formattedDescription} />
+      <WeatherIcon weatherCode={weatherCode} />
       <DayDetail>
         <LightText>H:&nbsp;</LightText>
-        <Text>{round(tempDayHigh)}&deg;</Text>
+        <Text>{round(tempHigh)}&deg;</Text>
       </DayDetail>
       <DayDetail>
         <LightText>L:&nbsp;</LightText>
-        <Text>{round(tempDayLow)}&deg;</Text>
+        <Text>{round(tempLow)}&deg;</Text>
       </DayDetail>
-      {precipitation ? (
+      {pop ? (
         <DayDetail>
           <LightText>POP:&nbsp;</LightText>
-          <Text>{precipitation}%</Text>
+          <Text>{pop}%</Text>
         </DayDetail>
       ) : (
         ""
