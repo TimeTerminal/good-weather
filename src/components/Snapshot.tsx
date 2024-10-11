@@ -28,7 +28,7 @@ const SnapshotSection = styled.section`
 const Row1 = styled.span`
   display: flex;
   justify-content: center;
-  min-height: 160px;
+  min-height: 200px;
 `;
 
 const Title = styled.span<ThemableElement>`

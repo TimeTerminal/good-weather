@@ -10,17 +10,25 @@ declare module "*.svg" {
 // === Components ===
 // ==================
 type Header = {
-  fetchWeatherData: FetchWeatherData;
+  isDarkTheme: boolean;
+  locationName: string;
+  toggleSettings: function;
+};
+
+type SettingsProps = {
   isDarkTheme: boolean;
   isError: boolean;
   isMetric: boolean;
-  locationName: string;
+  isSettingsOpen: boolean;
   setIsDarkTheme: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMetric: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+  toggleSettings: function;
+  fetchWeatherData: FetchWeatherData;
 };
 
-type Icon = {
+type IconType = {
+  hasDropShadow?: boolean;
   iconColor?: string;
   iconName: string;
 };
@@ -126,6 +134,7 @@ interface ErrorText {
 
 interface StyledIcon {
   readonly $iconColor: string;
+  readonly $hasDropShadow: boolean;
 }
 
 interface StyledWeatherIcon {

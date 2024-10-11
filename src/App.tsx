@@ -2,8 +2,10 @@ import React, { lazy, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import Header from "./components/Header";
-const Snapshot = lazy(() => import("./components/Snapshot"));
+import Settings from "./components/Settings";
 import MultiDay from "./components/FutureForecast/MultiDay";
+const Snapshot = lazy(() => import("./components/Snapshot"));
+
 import { API_URL, RESPONSIVE_SIZES } from "./constants";
 
 const AppContainer = styled.div`
@@ -44,9 +46,16 @@ const Layout = styled.div`
   }
 `;
 
+const TopRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 const App = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [isMetric, setIsMetric] = useState(true);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("Toronto");
   const [location, setLocation] = useState("Toronto");
   const [viewportWidth, setViewportWidth] = useState(window.outerWidth);
@@ -186,6 +195,10 @@ const App = () => {
     }
   };
 
+  const toggleSettings = () => {
+    setIsSettingsOpen(!isSettingsOpen);
+  };
+
   useEffect(() => {
     fetchWeatherData();
   }, [isMetric]);
@@ -194,16 +207,24 @@ const App = () => {
     <AppContainer>
       <Backdrop $isDarkTheme={isDarkTheme}>
         <Layout>
-          <Header
-            fetchWeatherData={fetchWeatherData}
-            isDarkTheme={isDarkTheme}
-            isError={state.error}
-            isMetric={isMetric}
-            locationName={location}
-            setIsDarkTheme={setIsDarkTheme}
-            setIsMetric={setIsMetric}
-            setSearchValue={setSearchValue}
-          />
+          <TopRow>
+            <Header
+              isDarkTheme={isDarkTheme}
+              locationName={location}
+              toggleSettings={toggleSettings}
+            />
+            <Settings
+              fetchWeatherData={fetchWeatherData}
+              isError={state.error}
+              isMetric={isMetric}
+              isSettingsOpen={isSettingsOpen}
+              isDarkTheme={isDarkTheme}
+              setIsDarkTheme={setIsDarkTheme}
+              setIsMetric={setIsMetric}
+              setSearchValue={setSearchValue}
+              toggleSettings={toggleSettings}
+            />
+          </TopRow>
 
           <Snapshot
             isDarkTheme={isDarkTheme}

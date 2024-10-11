@@ -2,8 +2,8 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { round } from "lodash";
 
-import { RESPONSIVE_SIZES } from "../../constants";
 import WeatherIcon from "../WeatherIcon";
+import { RESPONSIVE_SIZES } from "../../constants";
 import { createDate, getDayName } from "../../helpers";
 
 const DayContainer = styled.button<DayContainer>`
@@ -96,7 +96,7 @@ const Divider = styled.hr`
   }
 `;
 
-const Icon = styled(WeatherIcon)<WeatherIcon>`
+const StyledIcon = styled(WeatherIcon)<WeatherIcon>`
   margin: 0 0 10px;
 `;
 
@@ -136,7 +136,7 @@ const SingleDay: React.FC<SingleDay> = ({
       <Day>{id === 0 ? "Today" : getDayName(day)}</Day>
       <Date>{date}</Date>
       <Divider />
-      <Icon weatherCode={weatherCode} />
+      <StyledIcon weatherCode={weatherCode} />
       <DayDetail>
         <LightText>H:&nbsp;</LightText>
         <Text>{round(tempHigh)}&deg;</Text>

@@ -1,17 +1,24 @@
 import React, { lazy, useMemo } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const StyledIcon = styled.div<StyledIcon>`
-  width: "55px";
+  width: 55px;
   margin: 0;
   background: none;
   transition: 0.5s ease;
 
-  filter: ${({ $iconColor }) =>
-    $iconColor ? `drop-shadow(0 0 10px ${$iconColor})` : "none"};
+  ${({ $hasDropShadow, $iconColor }) =>
+    $hasDropShadow &&
+    css`
+      filter: $iconColor ? drop-shadow(0 0 10px ${$iconColor}) : "none";
+   `}
 `;
 
-const Icon: React.FC<Icon> = ({ iconColor = "#fff", iconName }) => {
+const Icon: React.FC<IconType> = ({
+  hasDropShadow = false,
+  iconColor = "#fff",
+  iconName,
+}) => {
   const IconComponent = useMemo(() => {
     return lazy(() =>
       import(`../images/icons/${iconName}.svg.js`).catch(
@@ -21,7 +28,7 @@ const Icon: React.FC<Icon> = ({ iconColor = "#fff", iconName }) => {
   }, [iconName]);
 
   return (
-    <StyledIcon $iconColor={iconColor}>
+    <StyledIcon $iconColor={iconColor} $hasDropShadow={hasDropShadow}>
       <React.Suspense>
         <IconComponent stroke={iconColor} />
       </React.Suspense>
