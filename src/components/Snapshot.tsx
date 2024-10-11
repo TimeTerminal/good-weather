@@ -42,7 +42,7 @@ const Title = styled.span<ThemableElement>`
   line-height: 1;
 
   @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
-    font-size: 6em;
+    font-size: 9em;
   }
 `;
 

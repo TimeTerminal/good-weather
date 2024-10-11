@@ -15,7 +15,7 @@ const Section = styled.section`
     rgba(1, 22, 66, 0.25) 0px 0.125em 0.5em,
     rgba(1, 22, 66, 0) 0px 0px 0px 1px inset;
 
-  @media (max-width: 560px) {
+  @media (max-width: 670px) {
     width: 100%;
   }
 `;
@@ -32,7 +32,7 @@ const SectionTitle = styled.h4<ThemableElement>`
 const ScrollableDiv = styled.div`
   width: max-content;
 
-  @media (max-width: 560px) {
+  @media (max-width: 670px) {
     justify-content: left;
     width: 100%;
     overflow-x: scroll;

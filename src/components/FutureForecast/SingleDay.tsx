@@ -42,7 +42,7 @@ const DayContainer = styled.button<DayContainer>`
       );
     `}
 
-  @media (max-width: ${RESPONSIVE_SIZES.DESKTOP}px) {
+  @media (max-width: 950px) {
     margin: 0;
     padding: 10px;
     min-width: 100px;
@@ -148,7 +148,7 @@ const SingleDay: React.FC<SingleDay> = ({
       {pop ? (
         <DayDetail>
           <LightText>POP:&nbsp;</LightText>
-          <Text>{pop}%</Text>
+          <Text>{round(pop)}%</Text>
         </DayDetail>
       ) : (
         ""

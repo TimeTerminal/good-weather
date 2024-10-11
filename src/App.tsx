@@ -114,10 +114,10 @@ const App = () => {
   /**
    * API response parser called by `fetchWeatherData` upon successful weather data being received.
    * @param returnedData Weather data returned by the tomorrow.io API
-   * @returns Filtered daily weather data for 5 days
+   * @returns Filtered daily weather data for 5 days, total 6 days
    */
   const parseAPIResponse = (returnedData: APIData): SingleDayData[] => {
-    const filteredData: SingleDayData[] = returnedData.timelines.daily.map(
+    const filteredData: SingleDayData[] = returnedData.timelines.daily.slice(0, 6).map(
       ({ time, values }) => ({
         humidity: values.humidityAvg,
         pop: values.precipitationProbabilityAvg,
