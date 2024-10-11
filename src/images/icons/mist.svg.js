@@ -7,11 +7,10 @@ const SVG = ({ stroke = "#fff" }) => (
     height="100%"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={stroke}
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    class="feather feather-align-center"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-align-center"
   >
     <line x1="18" y1="10" x2="6" y2="10"></line>
     <line x1="21" y1="6" x2="3" y2="6"></line>
