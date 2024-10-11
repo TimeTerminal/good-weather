@@ -97,18 +97,12 @@ const Divider = styled.hr`
 `;
 
 const Icon = styled(WeatherIcon)<WeatherIcon>`
-  width: 3em;
   margin: 0 0 10px;
-
-  @media (max-width: ${RESPONSIVE_SIZES.MOBILE}px) {
-    width: 2em;
-  }
 `;
 
 const DayDetail = styled.span`
   display: inline-flex;
   font-size: 1.2em;
-  margin: 0 0 5px;
 `;
 
 const Text = styled.p`
@@ -142,7 +136,7 @@ const SingleDay: React.FC<SingleDay> = ({
       <Day>{id === 0 ? "Today" : getDayName(day)}</Day>
       <Date>{date}</Date>
       <Divider />
-      <WeatherIcon weatherCode={weatherCode} />
+      <Icon weatherCode={weatherCode} />
       <DayDetail>
         <LightText>H:&nbsp;</LightText>
         <Text>{round(tempHigh)}&deg;</Text>

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const StyledIcon = styled.div<StyledWeatherIcon>`
   width: ${({ $isHeaderImage }) => ($isHeaderImage ? "70px" : "55px")};
-  margin: ${({ $isHeaderImage }) => $isHeaderImage && "0 15px 0 0"};
+  margin: ${({ $isHeaderImage }) => $isHeaderImage && "0 10px 0 0"};
   background: none;
   transition: 0.5s ease;
 

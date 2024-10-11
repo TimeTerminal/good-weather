@@ -61,12 +61,10 @@ const App = () => {
   });
 
   const url = new URL(
-    `${API_URL}?location=42.3478,-71.0466&apikey=${
+    `${API_URL}?location=${searchValue}&apikey=${
       process.env.WEATHER_API_KEY
     }&units=${isMetric ? "metric" : "imperial"}`
   );
-
-  // location=${searchValue}
 
   useEffect(() => {
     const handleResize = () => {

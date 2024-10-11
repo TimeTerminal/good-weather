@@ -28,11 +28,12 @@ const SnapshotSection = styled.section`
 const Row1 = styled.span`
   display: flex;
   justify-content: center;
-  align-items: center;
   min-height: 160px;
 `;
 
-const Title = styled.h1<ThemableElement>`
+const Title = styled.span<ThemableElement>`
+  display: flex;
+  align-items: center;
   margin: 0;
   color: ${({ $isDarkTheme }) =>
     $isDarkTheme ? "var(--title)" : "var(--lightModeTitle)"};
@@ -93,6 +94,11 @@ const MetricLabel = styled.p<ThemableElement>`
   }
 `;
 
+const TitleUnits = styled.sup`
+  font-size: 0.3em;
+  height: 3em;
+`;
+
 const TemperatureUnits = styled.sup`
   font-size: 0.5em;
 `;
@@ -113,9 +119,9 @@ const Snapshot: React.FC<Snapshot> = ({
             <WeatherIcon isHeaderImage weatherCode={weatherCode} />
             <Title $isDarkTheme={isDarkTheme}>
               {round(tempAvg)}
-              <TemperatureUnits>
+              <TitleUnits>
                 {getTemperatureUnits(isMetric)}
-              </TemperatureUnits>
+              </TitleUnits>
             </Title>
           </Row1>
 
@@ -152,7 +158,7 @@ const Snapshot: React.FC<Snapshot> = ({
 
             <SnapshotColumn>
               <MetricText $isDarkTheme={isDarkTheme}>
-                {`${humidity}%`}
+                {`${round(humidity)}%`}
               </MetricText>
               <MetricLabel $isDarkTheme={isDarkTheme}>Humidity</MetricLabel>
             </SnapshotColumn>

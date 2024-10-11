@@ -109,8 +109,6 @@ const Toggles = styled.span`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  grid-column: 3 / 3;
-  grid-row: 1;
 `;
 
 const TemperatureUnitToggle = styled(StyledButton)`
